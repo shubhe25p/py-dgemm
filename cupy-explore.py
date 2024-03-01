@@ -273,7 +273,7 @@ def main():
     [ A, B, C ] = create_arrays( nsize, xp )
     gpu_times = matmul_loop( niterations, A, B, C, xp, devices=(0,1,2,3))
     for i in range(4):
-        print("GPU",i,"=",xp.mean(gpu_times[i]) * 1e3)
+        print("GPU",i,"=",xp.mean(gpu_times[i]))
     # check against source of truth
     #is_correct = check_correctness( nsize, A, B, C, testseed )
     #assert( is_correct )
