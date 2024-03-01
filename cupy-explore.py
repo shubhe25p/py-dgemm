@@ -2,15 +2,14 @@
 
 import time
 import argparse
-import numpy as np
 import math
-
+import numpy as np
 ##Hardware-specific python modules (including drop-in Numpy subtitutes) here
 ##substitute your own!
 ##NumPy substitutes should be aliased to "xp"
 import cupy 
 xp = cupy
-
+from cupyx.profiler import benchmark
 #// -----
 #// Function: numpy_initializer
 #// Switch between numpy(np) or accelerated-numpy(xp).
@@ -100,11 +99,11 @@ def create_arrays(nsize, xp ):
 
     print("Preparing Matrix arrays")
     print("Memory required: {}".format( memory_string( 3 * nsize * nsize * 8 ) ) )
-
+    #xp.cuda.runtime.setDevice(1)
     t_start = time.time()
-    A = xp.zeros((nsize,nsize),dtype="int4")
-    B = xp.zeros((nsize,nsize),dtype="int4")
-    C = xp.zeros((nsize,nsize),dtype="int4")
+    A = xp.zeros((nsize,nsize))
+    B = xp.zeros((nsize,nsize))
+    C = xp.zeros((nsize,nsize))
     t_end = time.time()
     deltat = t_end - t_start
     print("Time for Array Allocation (sec): {:.6f}".format( deltat ) )
@@ -118,7 +117,7 @@ def create_arrays(nsize, xp ):
     t_end = time.time()
     deltat = t_end - t_start
     print("Time for Array Initialization (sec): {:.3f}".format( deltat ) )
-
+    print("CUDA DEVICE=",xp.cuda.get_device_id())
     return A, B, C
 
 
@@ -131,37 +130,56 @@ def create_arrays(nsize, xp ):
 #// This function should not be modified.
 #// The call to xp.matmul should have the same signature, even if xp != Numpy
 #// ------------------------------------------------------- //
-def matmul_loop(niterations, A, B, C, xp ):
+def matmul_loop(niterations, A, B, C, xp, devices ):
 
 
     print("Running matmul...")
+    #tstart = time.time()
+    #synchronize_host_accel()
+    #tend = time.time()
+    #deltat = tend - tstart
+    #print("Synchronization Overhead (sec): {:.2e}".format( deltat ) )
+    e1=[]
+    e2=[]
 
-    tstart = time.time()
-    synchronize_host_accel()
-    tend = time.time()
-    deltat = tend - tstart
-    print("Synchronization Overhead (sec): {:.2e}".format( deltat ) )
-       
-    deltat = np.zeros( niterations )
+    for i in devices:
+        xp.cuda.runtime.setDevice(i)
+        e1.append(xp.cuda.Event())
+        e2.append(xp.cuda.Event())
+
+    print("Warming up GPU a bit")
+    for i in range(10):
+        xp.cuda.runtime.setDevice(0)
+        xp.matmul(A,B,C)
+
+    for e, device in zip(e1, devices):
+        xp.cuda.runtime.setDevice(device)
+        e.record()
+        e.synchronize()
+
+    gpu_times=[[] for i in e1]
+    print("reached here")
     for i in range(niterations):
+        for e, device in zip(e1, devices):
+            xp.cuda.runtime.setDevice(device)
+            e.record()
 
-        synchronize_host_accel()
-        tstart = time.time()
+        xp.matmul(xp.asarray(A),xp.asarray(B),xp.asarray(C))
 
-        xp.matmul(A, B, out=C )
+        for e, device in zip(e2,devices):
+            xp.cuda.runtime.setDevice(device)
+            e.record()
 
-        synchronize_host_accel()
-        tend = time.time()
+        for e, device in zip(e2,devices):
+            xp.cuda.runtime.setDevice(device)
+            e.synchronize()
 
-        deltat[i] = tend - tstart
+        for i, (ev1, ev2) in enumerate(zip(e1, e2)):
+            gpu_t = xp.cuda.get_elapsed_time(ev1, ev2) * 1e-3
+            gpu_times[i].append(gpu_t)
 
-        if( i==0 ):
-            print("First of {:d} iterations (sec): {:.6f}".format( niterations, deltat[0] ) )
-
-    # sanity check array type
-    #print("type of C:", type(C))
-
-    return deltat
+    print("CUDA DEVICE=",xp.cuda.get_device_id())
+    return np.asarray(gpu_times, dtype=np.float64)
 
 
 
@@ -208,27 +226,8 @@ def report_performance(niterations, nsize, deltat_matmul ):
 
     flops = (2*nsize**3+ 2*nsize*nsize)  
     gflops = [ flops / t / 1.0e9 for t in deltat_matmul ]
-    gflops_avg = (flops / xp.sum(deltat_matmul) / 1.0e9) * niterations
 
-    print_all_iterations = False
-    if( print_all_iterations ):
-        print("FlopCount: {}".format( flops ) )
-        for i in range( niterations ):
-            print("iter: {:2d}   time: {:.6f}   gflops: {: 7.2f}".format( i, deltat_matmul[i], gflops[i] ) )
-        print("")
-
-
-    ind = { "First":0,
-            "Last":niterations-1,
-            "Best":np.argmin( deltat_matmul ) }
-    
-    print("FlopCount: {:e}".format( flops ) )
-    print("{:15s}   {:7s} {:7s}".format("Iteration (int)","Time(s)","Gflop/s"))
-    for s in ["First", "Last", "Best"]:
-        i = ind[s]
-        si = "{:s} ({:d})".format( s, i )
-        print("{:15s}   {:7.5f} {:7.1f}".format( si, deltat_matmul[i], gflops[i] ) )
-    print("GLOPS AVG = {:7.2f}".format(gflops_avg))
+    print("GLOPS AVG NORMAL TIME= {:7.2f}".format(xp.mean(np.asarray(gflops))))
     #xp.set_printoptions(precision=2)
     print(gflops)
 
@@ -241,7 +240,7 @@ def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--niterations", type=int, required=False, default=10, help="number of iterations")
     parser.add_argument("--nsize", type=int, required=False, default=5004, help="dimension of square matrix")
-    parser.add_argument("--accelerator", required=False, action='store_true', help="option to use accelerator")
+    parser.add_argument("--accelerator", required=False, default=True, action='store_true', help="option to use accelerator")
     parser.add_argument("--shownumpy", required=False, action='store_true', help="show numpy configuration")
     parser.add_argument("--testseed", type=int, required=False, default=None, help="random seed for sampling matrix elements to validate (integer).")
     args = parser.parse_args()
@@ -268,24 +267,21 @@ def main():
     niterations = args.niterations
     nsize       = args.nsize
     testseed    = args.testseed
-    
     #choose the appropriate numpy-like interface:
     xp = numpy_initializer( args.shownumpy )
-
-    #create working arrays on the target processor ( host or accelerator )
+    #xp.cuda.runtime.setDevice(1)
     [ A, B, C ] = create_arrays( nsize, xp )
-    
-    print(A.dtype)
-    # do matmul (dgemm) 
-    deltat_matmul = matmul_loop( niterations, A, B, C, xp )
-
+    gpu_times = matmul_loop( niterations, A, B, C, xp, devices=(0,1,2,3))
+    print(gpu_times)
+    for i in range(4):
+        print(xp.mean(gpu_times[i]))
     # check against source of truth
     #is_correct = check_correctness( nsize, A, B, C, testseed )
     #assert( is_correct )
 
     # if correctness test has passed, report performance
-    report_performance( niterations, nsize, deltat_matmul )
-    
+    report_performance( niterations, nsize, gpu_times)
+    #print(benchmark(xp.matmul, (A, B, C), n_repeat=niterations, devices=(0,1,2,3)))
 if __name__ == '__main__':
     main()
 
