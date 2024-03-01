@@ -272,15 +272,14 @@ def main():
     #xp.cuda.runtime.setDevice(1)
     [ A, B, C ] = create_arrays( nsize, xp )
     gpu_times = matmul_loop( niterations, A, B, C, xp, devices=(0,1,2,3))
-    print(gpu_times)
     for i in range(4):
-        print(xp.mean(gpu_times[i]))
+        print("GPU",i,"=",xp.mean(gpu_times[i]) * 1e3)
     # check against source of truth
     #is_correct = check_correctness( nsize, A, B, C, testseed )
     #assert( is_correct )
 
     # if correctness test has passed, report performance
-    report_performance( niterations, nsize, gpu_times)
+    #report_performance( niterations, nsize, gpu_times)
     #print(benchmark(xp.matmul, (A, B, C), n_repeat=niterations, devices=(0,1,2,3)))
 if __name__ == '__main__':
     main()
