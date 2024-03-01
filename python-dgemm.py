@@ -4,6 +4,7 @@ import time
 import argparse
 import numpy as np
 import math
+import os
 
 ##Hardware-specific python modules (including drop-in Numpy subtitutes) here
 ##substitute your own!
@@ -102,9 +103,9 @@ def create_arrays(nsize, xp ):
     print("Memory required: {}".format( memory_string( 3 * nsize * nsize * 8 ) ) )
 
     t_start = time.time()
-    A = xp.zeros((nsize,nsize),dtype="int4")
-    B = xp.zeros((nsize,nsize),dtype="int4")
-    C = xp.zeros((nsize,nsize),dtype="int4")
+    A = xp.zeros((nsize,nsize))
+    B = xp.zeros((nsize,nsize))
+    C = xp.zeros((nsize,nsize))
     t_end = time.time()
     deltat = t_end - t_start
     print("Time for Array Allocation (sec): {:.6f}".format( deltat ) )
@@ -206,9 +207,8 @@ def check_correctness( nsize, A, B, C, testseed ):
 def report_performance(niterations, nsize, deltat_matmul ):
   
 
-    flops = (2*nsize**3+ 2*nsize*nsize)  
+    flops = 2 * (nsize**3) + 2 * nsize**2    
     gflops = [ flops / t / 1.0e9 for t in deltat_matmul ]
-    gflops_avg = (flops / xp.sum(deltat_matmul) / 1.0e9) * niterations
 
     print_all_iterations = False
     if( print_all_iterations ):
@@ -217,7 +217,7 @@ def report_performance(niterations, nsize, deltat_matmul ):
             print("iter: {:2d}   time: {:.6f}   gflops: {: 7.2f}".format( i, deltat_matmul[i], gflops[i] ) )
         print("")
 
-
+        
     ind = { "First":0,
             "Last":niterations-1,
             "Best":np.argmin( deltat_matmul ) }
@@ -228,9 +228,7 @@ def report_performance(niterations, nsize, deltat_matmul ):
         i = ind[s]
         si = "{:s} ({:d})".format( s, i )
         print("{:15s}   {:7.5f} {:7.1f}".format( si, deltat_matmul[i], gflops[i] ) )
-    print("GLOPS AVG = {:7.2f}".format(gflops_avg))
-    #xp.set_printoptions(precision=2)
-    print(gflops)
+
 
 #// -----
 #// Function: get_args
@@ -240,7 +238,7 @@ def get_args():
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--niterations", type=int, required=False, default=10, help="number of iterations")
-    parser.add_argument("--nsize", type=int, required=False, default=5004, help="dimension of square matrix")
+    parser.add_argument("--nsize", type=int, required=False, default=8000, help="dimension of square matrix")
     parser.add_argument("--accelerator", required=False, action='store_true', help="option to use accelerator")
     parser.add_argument("--shownumpy", required=False, action='store_true', help="show numpy configuration")
     parser.add_argument("--testseed", type=int, required=False, default=None, help="random seed for sampling matrix elements to validate (integer).")
@@ -275,13 +273,18 @@ def main():
     #create working arrays on the target processor ( host or accelerator )
     [ A, B, C ] = create_arrays( nsize, xp )
     
-    print(A.dtype)
+    threads = [64, 128, 256, 512, 1024, 2048]
+    for thread in threads:
+        os.environ["OMP_NUM_THREADS"] = str(thread)
+        print("OMP_NUM_THREADS: ", os.environ["OMP_NUM_THREADS"])
+        # run the matmul
+        deltat_matmul = matmul_loop( niterations, A, B, C, xp )
     # do matmul (dgemm) 
-    deltat_matmul = matmul_loop( niterations, A, B, C, xp )
+    # deltat_matmul = matmul_loop( niterations, A, B, C, xp )
 
     # check against source of truth
-    #is_correct = check_correctness( nsize, A, B, C, testseed )
-    #assert( is_correct )
+    is_correct = check_correctness( nsize, A, B, C, testseed )
+    assert( is_correct )
 
     # if correctness test has passed, report performance
     report_performance( niterations, nsize, deltat_matmul )
