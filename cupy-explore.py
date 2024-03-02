@@ -174,8 +174,8 @@ def main():
 
     #choose the appropriate numpy-like interface:
     [ A, B, C ] = create_arrays( nsize, xp )
-    gpu_times = matmul_loop( niterations, A, B, C, xp, devices=(0,1,2,3))
-    for i in range(4):
+    gpu_times = matmul_loop( niterations, A, B, C, xp, devices=(0))
+    for i in range(1):
         print("GPU",i,"=",xp.mean(gpu_times[i]))
     
 
