@@ -95,17 +95,16 @@ def matmul_loop(niterations, A, B, C, xp, devices):
         e1.append(xp.cuda.Event())
         e2.append(xp.cuda.Event())
 
-    xp.cuda.runtime.setDevice(0)
     print("Warming up GPU a bit")
     for i in range(10):
         xp.matmul(A,B,C)
 
     gpu_times=[[] for i in e1]
 
-    for e, device in zip(e1, devices):
-        xp.cuda.runtime.setDevice(device)
-        e.record()
-        e.synchronize()
+    # for e, device in zip(e1, devices):
+    #     xp.cuda.runtime.setDevice(device)
+    #     e.record()
+    #     e.synchronize()
 
     for i in range(niterations):
         for e, device in zip(e1, devices):
@@ -174,7 +173,7 @@ def main():
 
     #choose the appropriate numpy-like interface:
     [ A, B, C ] = create_arrays( nsize, xp )
-    gpu_times = matmul_loop( niterations, A, B, C, xp, devices=(0))
+    gpu_times = matmul_loop( niterations, A, B, C, xp, devices=(0,))
     for i in range(1):
         print("GPU",i,"=",xp.mean(gpu_times[i]))
     
