@@ -109,7 +109,7 @@ def matmul_loop(niterations, A, B, C, xp, devices):
             xp.cuda.runtime.setDevice(device)
             e.record()
 
-        xp.matmul(A,B,xp.asarray(C))
+        xp.matmul(A,B,C)
 
         for e, device in zip(e2,devices):
             xp.cuda.runtime.setDevice(device)
