@@ -63,9 +63,9 @@ def create_arrays(nsize, xp ):
     t_end = time.time()
     deltat = t_end - t_start
 
-    for i in range(4):
-        xp.cuda.runtime.setDevice(i)
-        initialize_accel_arrays( nsize, A, B )
+    # for i in range(4):
+    #     xp.cuda.runtime.setDevice(i)
+    initialize_accel_arrays( nsize, A, B )
 
     print("Time for Array Initialization (sec): {:.3f}".format( deltat ) )
     print("CUDA DEVICE=",xp.cuda.get_device_id())
