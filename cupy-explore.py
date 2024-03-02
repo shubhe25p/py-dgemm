@@ -117,9 +117,6 @@ def matmul_loop(niterations, A, B, C, xp, devices):
         for e, device in zip(e2,devices):
             xp.cuda.runtime.setDevice(device)
             e.record()
-
-        for e, device in zip(e2,devices):
-            xp.cuda.runtime.setDevice(device)
             e.synchronize()
 
         for i, (ev1, ev2) in enumerate(zip(e1, e2)):
@@ -135,7 +132,7 @@ def report_performance(niterations, nsize, deltat_matmul ):
   
 
     flops = (2*nsize**3+ 2*nsize*nsize)  
-    gflops = [ flops / t / 1.0e9 for t in deltat_matmul ]
+    gflops = [ flops / t / 1.0e3 for t in deltat_matmul ]
 
     for i in range(len(gflops)):
         print("GLOPS GPU",i,"=",xp.mean(np.asarray(gflops[i])))
