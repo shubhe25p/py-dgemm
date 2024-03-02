@@ -137,7 +137,7 @@ def matmul_loop(niterations, A, B, C, xp, devices):
             e.synchronize()
 
         for i, (ev1, ev2) in enumerate(zip(e1, e2)):
-            gpu_t = xp.cuda.get_elapsed_time(ev1, ev2) * 1e-3
+            gpu_t = xp.cuda.get_elapsed_time(ev1, ev2) * 1e3
             gpu_times[i].append(gpu_t)
 
     print("CUDA DEVICE=",xp.cuda.get_device_id())
