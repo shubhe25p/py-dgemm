@@ -62,13 +62,11 @@ def create_arrays(nsize, xp ):
     C = xp.zeros((nsize,nsize))
     t_end = time.time()
     deltat = t_end - t_start
-    print("Time for Array Allocation (sec): {:.6f}".format( deltat ) )
-    
 
-    t_start = time.time()
-    initialize_accel_arrays( nsize, A, B )
-    t_end = time.time()
-    deltat = t_end - t_start
+    for i in range(4):
+        xp.cuda.runtime.setDevice(i)
+        initialize_accel_arrays( nsize, A, B )
+
     print("Time for Array Initialization (sec): {:.3f}".format( deltat ) )
     print("CUDA DEVICE=",xp.cuda.get_device_id())
     return A, B, C
@@ -177,7 +175,6 @@ def main():
     nsize       = args.nsize
 
     #choose the appropriate numpy-like interface:
-    xp.cuda.runtime.setDevice(2)
     [ A, B, C ] = create_arrays( nsize, xp )
     gpu_times = matmul_loop( niterations, A, B, C, xp, devices=(0, 1, 2, 3) )
     for i in range(4):
