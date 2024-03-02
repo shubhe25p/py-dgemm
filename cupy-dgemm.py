@@ -111,9 +111,9 @@ def create_arrays(nsize, xp ):
 
     t_start = time.time()
     if accelerator:
-        for i in range(4):
-            xp.cuda.runtime.setDevice(i)
-            initialize_accel_arrays( nsize, A, B )
+        # for i in range(4):
+        #     xp.cuda.runtime.setDevice(i)
+        initialize_accel_arrays( nsize, A, B )
     else:
         initialize_host_arrays( nsize, A, B )
     t_end = time.time()
