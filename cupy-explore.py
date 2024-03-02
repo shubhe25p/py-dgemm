@@ -35,24 +35,10 @@ def initialize_accel_arrays( nsize, A, B ):
         return a, b
 
     j, k = cupy.mgrid[0:nsize, 0:nsize]
-    A[:], B[:] = cupy_fuse_kernel(j, k)
+    for i in range(4):
+        xp.cuda.runtime.setDevice(i)
+        A[:], B[:] = cupy_fuse_kernel(j, k)
     cupy.cuda.runtime.deviceSynchronize()
-
-    
-
-#// -----
-#// CODE BELOW THIS LINE SHOULD NOT BE MODIFIED
-#// -----
-
-#// -----
-#// Function: initialize_host_arrays
-#// Initialize matrices using host memory/processor
-#// -----
-def initialize_host_arrays( nsize, A, B ):
-    for j in range(nsize):
-        for k in range(nsize):
-            A[j, k] = j*math.sin(j) + k*math.cos(k)
-            B[j, k] = k*math.cos(j) + j*math.sin(k)
 
 
 #// -----
@@ -115,12 +101,13 @@ def matmul_loop(niterations, A, B, C, xp, devices):
     for i in range(10):
         xp.matmul(A,B,C)
 
+    gpu_times=[[] for i in e1]
+
     for e, device in zip(e1, devices):
         xp.cuda.runtime.setDevice(device)
         e.record()
         e.synchronize()
 
-    gpu_times=[[] for i in e1]
     for i in range(niterations):
         for e, device in zip(e1, devices):
             xp.cuda.runtime.setDevice(device)
