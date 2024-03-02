@@ -95,7 +95,7 @@ def matmul_loop(niterations, A, B, C, xp, devices):
 
     print("Warming up GPU a bit")
     for i in range(10):
-        xp.matmul(A,B,xp.asarray(C))
+        xp.matmul(A,B,C)
 
     gpu_times=[[] for i in e1]
 
