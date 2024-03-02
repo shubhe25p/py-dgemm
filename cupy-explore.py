@@ -4,33 +4,11 @@ import time
 import argparse
 import math
 import numpy as np
-##Hardware-specific python modules (including drop-in Numpy subtitutes) here
-##substitute your own!
-##NumPy substitutes should be aliased to "xp"
+
 import cupy 
 xp = cupy
 from cupyx.profiler import benchmark
-#// -----
-#// Function: numpy_initializer
-#// Switch between numpy(np) or accelerated-numpy(xp).
-#// Device or library initialization may be added to this function if needed.
-#// -----
-def numpy_initializer( shownumpy ):
 
-    global xp
-    if accelerator:
-        try:
-            print("Using accelerated numpy:\n  {}\n".format( xp ) )
-        except:
-            print("The --accelerator option was used, but no accelerated numpy (e.g. cupy) was found.")
-            exit(1)
-    else:
-        xp = np
-
-    if shownumpy:
-        print( xp.show_config() )
-
-    return xp
 
 #// -----
 #// Function: synchronize_host_accel
@@ -60,13 +38,6 @@ def initialize_accel_arrays( nsize, A, B ):
     A[:], B[:] = cupy_fuse_kernel(j, k)
     cupy.cuda.runtime.deviceSynchronize()
 
-
-#// ----
-#// Function: copy_array_accel_to_host
-#//This may be modified for non-cupy.
-#// ----
-def copy_array_accel_to_host( Ad, Ah ):
-    Ah= Ad.get()
     
 
 #// -----
@@ -110,10 +81,7 @@ def create_arrays(nsize, xp ):
     
 
     t_start = time.time()
-    if accelerator:
-        initialize_accel_arrays( nsize, A, B )
-    else:
-        initialize_host_arrays( nsize, A, B )
+    initialize_accel_arrays( nsize, A, B )
     t_end = time.time()
     deltat = t_end - t_start
     print("Time for Array Initialization (sec): {:.3f}".format( deltat ) )
@@ -130,15 +98,10 @@ def create_arrays(nsize, xp ):
 #// This function should not be modified.
 #// The call to xp.matmul should have the same signature, even if xp != Numpy
 #// ------------------------------------------------------- //
-def matmul_loop(niterations, A, B, C, xp, devices ):
+def matmul_loop(niterations, A, B, C, xp, devices):
 
 
     print("Running matmul...")
-    #tstart = time.time()
-    #synchronize_host_accel()
-    #tend = time.time()
-    #deltat = tend - tstart
-    #print("Synchronization Overhead (sec): {:.2e}".format( deltat ) )
     e1=[]
     e2=[]
 
@@ -147,18 +110,17 @@ def matmul_loop(niterations, A, B, C, xp, devices ):
         e1.append(xp.cuda.Event())
         e2.append(xp.cuda.Event())
 
+    xp.cuda.runtime.setDevice(0)
     print("Warming up GPU a bit")
     for i in range(10):
-        xp.cuda.runtime.setDevice(0)
         xp.matmul(A,B,C)
 
     for e, device in zip(e1, devices):
         xp.cuda.runtime.setDevice(device)
         e.record()
-        e.synchronize()
+        # e.synchronize()
 
     gpu_times=[[] for i in e1]
-    print("reached here")
     for i in range(niterations):
         for e, device in zip(e1, devices):
             xp.cuda.runtime.setDevice(device)
@@ -181,44 +143,6 @@ def matmul_loop(niterations, A, B, C, xp, devices ):
     print("CUDA DEVICE=",xp.cuda.get_device_id())
     return np.asarray(gpu_times, dtype=np.float64)
 
-
-
-#// ------------------------------------------------------- //
-#// Function: check_correctness
-#// Sample a number (ntest) of matrix elements to compare
-#// Test against pythonic dot product
-#// ------------------------------------------------------- //    
-def check_correctness( nsize, A, B, C, testseed ):
-
-    print("Running correctness test...")
-    
-    C_test = C
-    if accelerator:
-        C_test = np.zeros((nsize, nsize))
-        copy_array_accel_to_host( C, C_test )
-
-    ntest = 1024
-    is_correct = True
-    rng = np.random.default_rng(testseed)
-    for itest in range( ntest ):
-
-        i = rng.integers( nsize, size=1 )[0]
-        j = rng.integers( nsize, size=1 )[0]
-        c_test = C[i,j]
-        c_ref = sum( [ (i*math.sin(i) + k * math.cos(k)) *
-                       (j*math.cos(k) + k * math.sin(j))
-                       for k in range( nsize ) ] )
-        itest_correct = math.isclose( c_ref, c_test )
-        
-        if not itest_correct:
-            msg = "Error Found at row {:d}, col {:d}. Expected: {:e}, Found: {:e}"
-            print( msg.format( i, j, c_ref, c_test ) )
-            is_correct = False
-
-    print()
-    print("Correctness test: {}".format(( "Passed" if is_correct  else "Failed")) )
-    return is_correct
-
     
 #// Function: report_performance
 def report_performance(niterations, nsize, deltat_matmul ):
@@ -240,16 +164,11 @@ def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--niterations", type=int, required=False, default=10, help="number of iterations")
     parser.add_argument("--nsize", type=int, required=False, default=5004, help="dimension of square matrix")
-    parser.add_argument("--accelerator", required=False, default=True, action='store_true', help="option to use accelerator")
-    parser.add_argument("--shownumpy", required=False, action='store_true', help="show numpy configuration")
-    parser.add_argument("--testseed", type=int, required=False, default=None, help="random seed for sampling matrix elements to validate (integer).")
     args = parser.parse_args()
 
     print("Requested Arguments:")
     print("  {:12s}: {}".format( "niterations", args.niterations ))
     print("  {:12s}: {}".format( "nsize",       args.nsize       ))
-    print("  {:12s}: {}".format( "accelerator", args.accelerator ))
-    print("  {:12s}: {}".format( "testseed",    args.testseed    ))
     
     return args
 
@@ -263,20 +182,17 @@ def main():
 
     #stores accelerator as a global variable
     global accelerator
-    accelerator = args.accelerator
+    accelerator = True
     niterations = args.niterations
     nsize       = args.nsize
-    testseed    = args.testseed
+
     #choose the appropriate numpy-like interface:
-    xp = numpy_initializer( args.shownumpy )
-    #xp.cuda.runtime.setDevice(1)
     [ A, B, C ] = create_arrays( nsize, xp )
     gpu_times = matmul_loop( niterations, A, B, C, xp, devices=(0,1,2,3))
     for i in range(4):
         print("GPU",i,"=",xp.mean(gpu_times[i]))
-    # check against source of truth
-    #is_correct = check_correctness( nsize, A, B, C, testseed )
-    #assert( is_correct )
+    
+
 
     # if correctness test has passed, report performance
     #report_performance( niterations, nsize, gpu_times)
