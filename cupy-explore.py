@@ -99,10 +99,10 @@ def matmul_loop(niterations, A, B, C, xp, devices):
 
     gpu_times=[[] for i in e1]
 
-    # for e, device in zip(e1, devices):
-    #     xp.cuda.runtime.setDevice(device)
-    #     e.record()
-    #     e.synchronize()
+    for e, device in zip(e1, devices):
+        xp.cuda.runtime.setDevice(device)
+        e.record()
+        e.synchronize()
 
     for i in range(niterations):
         for e, device in zip(e1, devices):
