@@ -26,7 +26,7 @@ def synchronize_host_accel():
 #// Here, cupy arrays are used to run this custom kernel on 
 #// May be modified for non-cupy
 #// -----
-def initialize_accel_arrays( nsize, A, B ):
+def initialize_accel_arrays( nsize, A, B):
 
     @cupy.fuse()
     def cupy_fuse_kernel(j, k):
@@ -34,10 +34,9 @@ def initialize_accel_arrays( nsize, A, B ):
         b = k*cupy.cos(j) + j*cupy.sin(k)
         return a, b
 
-    j, k = cupy.mgrid[0:nsize, 0:nsize]
-    for i in range(4):
-        xp.cuda.runtime.setDevice(i)
-        A[:], B[:] = cupy_fuse_kernel(j, k)
+    j, k= cupy.mgrid[0:nsize, 0:nsize]
+
+    A[:], B[:] = cupy_fuse_kernel(j, k)
     cupy.cuda.runtime.deviceSynchronize()
 
 
@@ -113,7 +112,7 @@ def matmul_loop(niterations, A, B, C, xp, devices):
             xp.cuda.runtime.setDevice(device)
             e.record()
 
-        xp.matmul(xp.asarray(A),xp.asarray(B),xp.asarray(C))
+        xp.matmul(A,B,C)
 
         for e, device in zip(e2,devices):
             xp.cuda.runtime.setDevice(device)
