@@ -92,8 +92,8 @@ def matmul_loop(niterations, A, B, C, xp, devices):
 
     for i in devices:
         xp.cuda.runtime.setDevice(i)
-        e1.append(xp.cuda.Event())
-        e2.append(xp.cuda.Event())
+        e1.append(xp.cuda.stream.Event())
+        e2.append(xp.cuda.stream.Event())
 
     print("Warming up GPU a bit")
     for i in range(10):
@@ -136,9 +136,13 @@ def report_performance(niterations, nsize, deltat_matmul ):
     flops = (2*nsize**3+ 2*nsize*nsize)  
     gflops = [ flops / t / 1.0e9 for t in deltat_matmul ]
 
-    print("GLOPS AVG NORMAL TIME= {:7.2f}".format(xp.mean(np.asarray(gflops))))
+    for i in range(len(gflops)):
+        print("GLOPS GPU",i,"=",xp.mean(np.asarray(gflops[i])))
+
+
+    #print("GLOPS AVG NORMAL TIME= {:7.2f}".format(xp.mean(np.asarray(gflops))))
     #xp.set_printoptions(precision=2)
-    print(gflops)
+    #print(gflops)
 
 #// -----
 #// Function: get_args
@@ -173,14 +177,14 @@ def main():
 
     #choose the appropriate numpy-like interface:
     [ A, B, C ] = create_arrays( nsize, xp )
-    gpu_times = matmul_loop( niterations, A, B, C, xp, devices=(0,))
-    for i in range(1):
+    gpu_times = matmul_loop( niterations, A, B, C, xp, devices=(0, 1, 2, 3) )
+    for i in range(4):
         print("GPU",i,"=",xp.mean(gpu_times[i]))
     
 
 
     # if correctness test has passed, report performance
-    #report_performance( niterations, nsize, gpu_times)
+    report_performance( niterations, nsize, gpu_times)
     #print(benchmark(xp.matmul, (A, B, C), n_repeat=niterations, devices=(0,1,2,3)))
 if __name__ == '__main__':
     main()
