@@ -8,16 +8,6 @@ import numpy as np
 import cupy 
 xp = cupy
 from cupyx.profiler import benchmark
-
-
-#// -----
-#// Function: synchronize_host_accel
-#// This is a no-op if running on the host
-#// May be modified for non-cupy
-#// -----
-def synchronize_host_accel():
-    if accelerator:
-        cupy.cuda.runtime.deviceSynchronize()
         
 
 #// -----
