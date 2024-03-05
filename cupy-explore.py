@@ -34,7 +34,7 @@ def initialize_accel_arrays( nsize, A, B):
 #// Function: create_arrays
 #// allocate matrices and call their initialization functions
 #// -----
-def create_arrays(nsize, xp ):
+def create_arrays(nsize, xp, device ):
 
     def memory_string( memory_bytes ):
         units = ' kMGTPX'
@@ -53,8 +53,7 @@ def create_arrays(nsize, xp ):
     t_end = time.time()
     deltat = t_end - t_start
 
-    # for i in range(4):
-    #     xp.cuda.runtime.setDevice(i)
+    xp.cuda.runtime.setDevice(device)
     initialize_accel_arrays( nsize, A, B )
 
     print("Time for Array Initialization (sec): {:.3f}".format( deltat ) )
@@ -166,9 +165,9 @@ def main():
     nsize       = args.nsize
     device      = args.device
 
-    xp.cuda.runtime.setDevice(device)
+    
     #choose the appropriate numpy-like interface:
-    [ A, B, C ] = create_arrays( nsize, xp )
+    [ A, B, C ] = create_arrays( nsize, xp, device )
     gpu_times = matmul_loop( niterations, A, B, C, xp, devices=(device,) )
     # for i in range(4):
     print("GPU ",device,"=",xp.mean(gpu_times[0]),"ms", "stddev=",xp.std(gpu_times[0]),"ms")
