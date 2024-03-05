@@ -81,16 +81,16 @@ def matmul_loop(niterations, A, B, C, xp, devices):
         e1.append(xp.cuda.stream.Event())
         e2.append(xp.cuda.stream.Event())
 
-    print("Warming up CPU a bit")
+    print("Warming up GPU a bit")
     for i in range(10):
-        np.matmul(A,B,C)
+        xp.matmul(A,B,C)
 
     gpu_times=[[] for i in e1]
 
-    for e, device in zip(e1, devices):
-        xp.cuda.runtime.setDevice(device)
-        e.record()
-        e.synchronize()
+    # for e, device in zip(e1, devices):
+    #     xp.cuda.runtime.setDevice(device)
+    #     e.record()
+    #     e.synchronize()
 
     for i in range(niterations):
         for e, device in zip(e1, devices):
