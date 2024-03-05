@@ -34,7 +34,7 @@ def initialize_accel_arrays( nsize, A, B):
 #// Function: create_arrays
 #// allocate matrices and call their initialization functions
 #// -----
-def create_arrays(nsize, xp, device ):
+def create_arrays(nsize, xp ):
 
     def memory_string( memory_bytes ):
         units = ' kMGTPX'
@@ -53,7 +53,6 @@ def create_arrays(nsize, xp, device ):
     t_end = time.time()
     deltat = t_end - t_start
 
-    xp.cuda.runtime.setDevice(device)
     initialize_accel_arrays( nsize, A, B )
 
     print("Time for Array Initialization (sec): {:.3f}".format( deltat ) )
@@ -78,7 +77,7 @@ def matmul_loop(niterations, A, B, C, xp, devices):
     e2=[]
 
     for i in devices:
-        xp.cuda.runtime.setDevice(i)
+        # xp.cuda.runtime.setDevice(i)
         e1.append(xp.cuda.stream.Event())
         e2.append(xp.cuda.stream.Event())
 
@@ -89,23 +88,23 @@ def matmul_loop(niterations, A, B, C, xp, devices):
     gpu_times=[[] for i in e1]
 
     for e, device in zip(e1, devices):
-        xp.cuda.runtime.setDevice(device)
+        # xp.cuda.runtime.setDevice(device)
         e.record()
         e.synchronize()
 
     for i in range(niterations):
         for e, device in zip(e1, devices):
-            xp.cuda.runtime.setDevice(device)
+            # xp.cuda.runtime.setDevice(device)
             e.record()
 
         xp.matmul(A,B,C)
 
         for e, device in zip(e2,devices):
-            xp.cuda.runtime.setDevice(device)
+            # xp.cuda.runtime.setDevice(device)
             e.record()
 
         for e, device in zip(e2,devices):
-            xp.cuda.runtime.setDevice(device)
+            # xp.cuda.runtime.setDevice(device)
             e.synchronize()
 
         for i, (ev1, ev2) in enumerate(zip(e1, e2)):
@@ -154,11 +153,13 @@ def get_args():
 #// Function: main
 #// -----
 def main():
-
+    
     #retreive command line arguments
     args = get_args()
 
     #stores accelerator as a global variable
+    xp.cuda.runtime.setDevice(device)
+
     global accelerator
     accelerator = True
     niterations = args.niterations
