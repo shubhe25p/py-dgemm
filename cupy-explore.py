@@ -105,7 +105,7 @@ def create_arrays(nsize, xp ):
 #// This function should not be modified.
 #// The call to xp.matmul should have the same signature, even if xp != Numpy
 #// ------------------------------------------------------- //
-def matmul_loop(niterations, A, B, C, xp, devices):
+def matmul_loop_async(niterations, A, B, C, xp, devices):
 
 
     print("Running matmul...")
@@ -123,10 +123,10 @@ def matmul_loop(niterations, A, B, C, xp, devices):
 
     gpu_times=[[] for i in e1]
 
-    # for e, device in zip(e1, devices):
-    #     xp.cuda.runtime.setDevice(device)
-    #     e.record()
-    #     e.synchronize()
+    for e, device in zip(e1, devices):
+        xp.cuda.runtime.setDevice(device)
+        e.record()
+        e.synchronize()
 
     for i in range(niterations):
         for e, device in zip(e1, devices):
@@ -158,8 +158,7 @@ def report_performance(niterations, nsize, deltat_matmul ):
     flops = (2*nsize**3+ 2*nsize*nsize)  
     gflops = [ flops / t / 1.0e3 for t in deltat_matmul ]
 
-    for i in range(len(gflops)):
-        print("GLOPS GPU",i,"=",xp.mean(np.asarray(gflops[i])))
+    print("GPU AVG CPU TIME= {:7.2f}".format(xp.mean(np.asarray(deltat_matmul)*1e6)))
 
 
     #print("GLOPS AVG NORMAL TIME= {:7.2f}".format(xp.mean(np.asarray(gflops))))
@@ -204,14 +203,15 @@ def main():
     xp.cuda.runtime.setDevice(device)
     #choose the appropriate numpy-like interface:
     [ A, B, C ] = create_arrays( nsize, xp )
-    gpu_times = matmul_loop( niterations, A, B, C, xp, devices=(device,) )
+    delta_num = matmul_loop( niterations, A, B, C, xp )
+    gpu_times = matmul_loop_async(niterations, A, B, C, xp, devices=(device,))
     # for i in range(4):
-    print("GPU ",device,"=",xp.mean(gpu_times[0]),"ms", "stddev=",xp.std(gpu_times[0]),"ms")
+    print("GPU ASYNC Profiling",device,"=",xp.mean(gpu_times[0]),"ms", "stddev=",xp.std(gpu_times[0]),"ms")
     
 
 
     # if correctness test has passed, report performance
-    report_performance( niterations, nsize, gpu_times)
+    report_performance( niterations, nsize, delta_num)
     #print(benchmark(xp.matmul, (A, B, C), n_repeat=niterations, devices=(0,1,2,3)))
 if __name__ == '__main__':
     main()
