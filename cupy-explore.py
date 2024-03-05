@@ -77,7 +77,7 @@ def matmul_loop(niterations, A, B, C, xp, devices):
     e2=[]
 
     for i in devices:
-        # xp.cuda.runtime.setDevice(i)
+        xp.cuda.runtime.setDevice(i)
         e1.append(xp.cuda.stream.Event())
         e2.append(xp.cuda.stream.Event())
 
@@ -88,23 +88,23 @@ def matmul_loop(niterations, A, B, C, xp, devices):
     gpu_times=[[] for i in e1]
 
     for e, device in zip(e1, devices):
-        # xp.cuda.runtime.setDevice(device)
+        xp.cuda.runtime.setDevice(device)
         e.record()
         e.synchronize()
 
     for i in range(niterations):
         for e, device in zip(e1, devices):
-            # xp.cuda.runtime.setDevice(device)
+            xp.cuda.runtime.setDevice(device)
             e.record()
 
         xp.matmul(A,B,C)
 
         for e, device in zip(e2,devices):
-            # xp.cuda.runtime.setDevice(device)
+            xp.cuda.runtime.setDevice(device)
             e.record()
 
         for e, device in zip(e2,devices):
-            # xp.cuda.runtime.setDevice(device)
+            xp.cuda.runtime.setDevice(device)
             e.synchronize()
 
         for i, (ev1, ev2) in enumerate(zip(e1, e2)):
@@ -164,8 +164,6 @@ def main():
     niterations = args.niterations
     nsize       = args.nsize
     device      = args.device
-    xp.cuda.runtime.setDevice(device)
-
     
     #choose the appropriate numpy-like interface:
     [ A, B, C ] = create_arrays( nsize, xp )
