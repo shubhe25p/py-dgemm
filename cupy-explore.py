@@ -16,6 +16,11 @@ from cupyx.profiler import benchmark
 #// Here, cupy arrays are used to run this custom kernel on 
 #// May be modified for non-cupy
 #// -----
+def synchronize_host_accel():
+    if accelerator:
+        cupy.cuda.runtime.deviceSynchronize()
+
+
 def initialize_accel_arrays( nsize, A, B):
 
     @cupy.fuse()
@@ -29,6 +34,37 @@ def initialize_accel_arrays( nsize, A, B):
     A[:], B[:] = cupy_fuse_kernel(j, k)
     cupy.cuda.runtime.deviceSynchronize()
 
+def matmul_loop(niterations, A, B, C, xp ):
+
+
+    print("Running matmul...")
+
+    tstart = time.time()
+    synchronize_host_accel()
+    tend = time.time()
+    deltat = tend - tstart
+    print("Synchronization Overhead (sec): {:.2e}".format( deltat ) )
+       
+    deltat = np.zeros( niterations )
+    for i in range(niterations):
+
+        synchronize_host_accel()
+        tstart = time.time()
+
+        xp.matmul(A, B, out=C )
+
+        synchronize_host_accel()
+        tend = time.time()
+
+        deltat[i] = tend - tstart
+
+        if( i==0 ):
+            print("First of {:d} iterations (sec): {:.6f}".format( niterations, deltat[0] ) )
+
+    # sanity check array type
+    #print("type of C:", type(C))
+
+    return deltat
 
 #// -----
 #// Function: create_arrays
