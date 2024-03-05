@@ -165,6 +165,7 @@ def main():
     nsize       = args.nsize
     device      = args.device
     
+    xp.cuda.runtime.setDevice(device)
     #choose the appropriate numpy-like interface:
     [ A, B, C ] = create_arrays( nsize, xp )
     gpu_times = matmul_loop( niterations, A, B, C, xp, devices=(device,) )
