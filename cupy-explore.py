@@ -158,13 +158,13 @@ def main():
     args = get_args()
 
     #stores accelerator as a global variable
-    xp.cuda.runtime.setDevice(device)
 
     global accelerator
     accelerator = True
     niterations = args.niterations
     nsize       = args.nsize
     device      = args.device
+    xp.cuda.runtime.setDevice(device)
 
     
     #choose the appropriate numpy-like interface:
