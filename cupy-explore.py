@@ -141,11 +141,13 @@ def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--niterations", type=int, required=False, default=10, help="number of iterations")
     parser.add_argument("--nsize", type=int, required=False, default=5004, help="dimension of square matrix")
+    parser.add_argument("--device", type=int, required=False, default=0, help="device to use")
     args = parser.parse_args()
 
     print("Requested Arguments:")
     print("  {:12s}: {}".format( "niterations", args.niterations ))
     print("  {:12s}: {}".format( "nsize",       args.nsize       ))
+    print("  {:12s}: {}".format( "device",      args.device      ))
     
     return args
 
@@ -162,10 +164,11 @@ def main():
     accelerator = True
     niterations = args.niterations
     nsize       = args.nsize
+    device      = args.device
 
     #choose the appropriate numpy-like interface:
     [ A, B, C ] = create_arrays( nsize, xp )
-    gpu_times = matmul_loop( niterations, A, B, C, xp, devices=(0) )
+    gpu_times = matmul_loop( niterations, A, B, C, xp, devices=(device,) )
     for i in range(4):
         print("GPU",i,"=",xp.mean(gpu_times[i]))
     
