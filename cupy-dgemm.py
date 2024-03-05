@@ -122,83 +122,6 @@ def create_arrays(nsize, xp ):
 
     return A, B, C
 
-
-
-        
-#// ------------------------------------------------------- //
-#// Function: matmul_loop
-#//
-#// Run & time matmul iterations.
-#// This function should not be modified.
-#// The call to xp.matmul should have the same signature, even if xp != Numpy
-#// ------------------------------------------------------- //
-def matmul_loop(niterations, A, B, C, xp ):
-
-
-    print("Running matmul...")
-    tstart = time.time()
-    synchronize_host_accel()
-    tend = time.time()
-    deltat = tend - tstart
-    print("Synchronization Overhead (sec): {:.2e}".format( deltat ) )
-       
-    print("CUDA DEVICE=",xp.cuda.get_device_id())
-    deltat = np.zeros( niterations )
-    for i in range(niterations):
-        synchronize_host_accel()
-        tstart = time.time()
-        xp.matmul(A, B, out=C )
-
-        synchronize_host_accel()
-        tend = time.time()
-        deltat[i] = tend - tstart
-
-        if( i==0 ):
-            print("First of {:d} iterations (sec): {:.6f}".format( niterations, deltat[0] ) )
-
-    # sanity check array type
-    #print("type of C:", type(C))
-
-    return deltat
-
-
-
-#// ------------------------------------------------------- //
-#// Function: check_correctness
-#// Sample a number (ntest) of matrix elements to compare
-#// Test against pythonic dot product
-#// ------------------------------------------------------- //    
-def check_correctness( nsize, A, B, C, testseed ):
-
-    print("Running correctness test...")
-    
-    C_test = C
-    if accelerator:
-        C_test = np.zeros((nsize, nsize))
-        copy_array_accel_to_host( C, C_test )
-
-    ntest = 1024
-    is_correct = True
-    rng = np.random.default_rng(testseed)
-    for itest in range( ntest ):
-
-        i = rng.integers( nsize, size=1 )[0]
-        j = rng.integers( nsize, size=1 )[0]
-        c_test = C[i,j]
-        c_ref = sum( [ (i*math.sin(i) + k * math.cos(k)) *
-                       (j*math.cos(k) + k * math.sin(j))
-                       for k in range( nsize ) ] )
-        itest_correct = math.isclose( c_ref, c_test )
-        
-        if not itest_correct:
-            msg = "Error Found at row {:d}, col {:d}. Expected: {:e}, Found: {:e}"
-            print( msg.format( i, j, c_ref, c_test ) )
-            is_correct = False
-
-    print()
-    print("Correctness test: {}".format(( "Passed" if is_correct  else "Failed")) )
-    return is_correct
-
     
 #// Function: report_performance
 def report_performance(niterations, nsize, deltat_matmul ):
@@ -241,6 +164,8 @@ def get_args():
     parser.add_argument("--accelerator", required=False, default=True, action='store_true', help="option to use accelerator")
     parser.add_argument("--shownumpy", required=False, action='store_true', help="show numpy configuration")
     parser.add_argument("--testseed", type=int, required=False, default=None, help="random seed for sampling matrix elements to validate (integer).")
+    parser.add_argument("--device", type=int, required=False, default=0, help="dimension of square matrix")
+
     args = parser.parse_args()
 
     print("Requested Arguments:")
@@ -248,6 +173,7 @@ def get_args():
     print("  {:12s}: {}".format( "nsize",       args.nsize       ))
     print("  {:12s}: {}".format( "accelerator", args.accelerator ))
     print("  {:12s}: {}".format( "testseed",    args.testseed    ))
+    print("  {:12s}: {}".format( "device",      args.device      ))
     
     return args
 
@@ -265,6 +191,7 @@ def main():
     niterations = args.niterations
     nsize       = args.nsize
     testseed    = args.testseed
+    device      = args.device
     
     #choose the appropriate numpy-like interface:
     xp = numpy_initializer( args.shownumpy )
@@ -278,7 +205,7 @@ def main():
 
     # if correctness test has passed, report performance
         #report_performance( niterations, nsize, deltat_matmul)
-    print(benchmark(xp.matmul, (A, B, C), n_repeat=niterations, devices=(0,1,2,3)))
+    print(benchmark(xp.matmul, (A, B, C), n_repeat=niterations, devices=(device,)))
 if __name__ == '__main__':
     main()
 
