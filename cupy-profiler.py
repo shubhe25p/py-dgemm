@@ -180,7 +180,7 @@ def report_performance(niterations, nsize, deltat_matmul ):
         i = ind[s]
         si = "{:s} ({:d})".format( s, i )
         print("{:15s}   {:7.5f} {:7.1f}".format( si, deltat_matmul[i], gflops[i] ) )
-    print("GPU AVG NORMAL TIME= {:7.2f}".format(xp.mean(np.asarray(deltat_matmul)* 1e6)))
+    print("GPU AVG NORMAL TIME= {:7.2f}".format(xp.mean(np.asarray(gflops))))
     #xp.set_printoptions(precision=2)
     #print(gflops)
 
@@ -231,15 +231,16 @@ def main():
     for i in range(4):
         xp.cuda.runtime.setDevice(i)
         print("CUDA DEVICE=",xp.cuda.get_device_id())
-        [ A, B, C ] = create_arrays( nsize, xp )
-        deltat_matmul = matmul_loop( niterations, A, B, C, xp )
+        for asize in [1024, 2048, 4096, 8192, 16384]:
+            [ A, B, C ] = create_arrays( asize, xp )
+            deltat_matmul = matmul_loop( niterations, A, B, C, xp )
 
     # check against source of truth
     #is_correct = check_correctness( nsize, A, B, C, testseed )
     #assert( is_correct )
 
     # if correctness test has passed, report performance
-        #report_performance( niterations, nsize, deltat_matmul)
+            report_performance( niterations, nsize, deltat_matmul)
     #print(benchmark(xp.matmul, (A, B, C), n_repeat=niterations, devices=(device,)))
 if __name__ == '__main__':
     main()
