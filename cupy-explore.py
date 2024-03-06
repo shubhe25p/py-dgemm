@@ -198,10 +198,11 @@ def main():
     device      = args.device
     
     #choose the appropriate numpy-like interface:
-    [ A, B, C ] = create_arrays( nsize, xp, devices=(0,3,2,1) )
+    devices = (0,1,2)
+    [ A, B, C ] = create_arrays( nsize, xp, devices )
     # delta_num = matmul_loop( niterations, A, B, C, xp )
-    gpu_times = matmul_loop_async(niterations, A, B, C, xp, devices=(0,3,2,1))
-    for i in range(4):
+    gpu_times = matmul_loop_async(niterations, A, B, C, xp, devices)
+    for i in devices:
         print("GPU ASYNC Profiling device ",i,"=",xp.mean(gpu_times[i]),"us", "+-",xp.std(gpu_times[i]),"us")
     
 
