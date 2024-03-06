@@ -82,7 +82,7 @@ def create_arrays(nsize, xp, devices ):
     print("Preparing Matrix arrays")
     print("Memory required: {}".format( memory_string( 3 * nsize * nsize * 8 ) ) )
 
-    for i in range(devices):
+    for i in devices:
         xp.cuda.runtime.setDevice(i)
         A = xp.zeros((nsize,nsize))
         B = xp.zeros((nsize,nsize))
