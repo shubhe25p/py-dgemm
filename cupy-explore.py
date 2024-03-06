@@ -81,19 +81,14 @@ def create_arrays(nsize, xp ):
 
     print("Preparing Matrix arrays")
     print("Memory required: {}".format( memory_string( 3 * nsize * nsize * 8 ) ) )
-    #xp.cuda.runtime.setDevice(1)
-    t_start = time.time()
-    A = xp.zeros((nsize,nsize))
-    B = xp.zeros((nsize,nsize))
-    C = xp.zeros((nsize,nsize))
-    t_end = time.time()
-    deltat = t_end - t_start
 
     for i in range(4):
         xp.cuda.runtime.setDevice(i)
+        A = xp.zeros((nsize,nsize))
+        B = xp.zeros((nsize,nsize))
+        C = xp.zeros((nsize,nsize))
         initialize_accel_arrays( nsize, A, B )
 
-    print("Time for Array Initialization (sec): {:.3f}".format( deltat ) )
     print("CUDA DEVICE=",xp.cuda.get_device_id())
     return A, B, C
 
@@ -208,7 +203,7 @@ def main():
     # delta_num = matmul_loop( niterations, A, B, C, xp )
     gpu_times = matmul_loop_async(niterations, A, B, C, xp, devices=(0,1,2,3))
     for i in range(4):
-        print("GPU ASYNC Profiling",device,"=",xp.mean(gpu_times[i]),"ms", "stddev=",xp.std(gpu_times[0]),"ms")
+        print("GPU ASYNC Profiling device ",i,"=",xp.mean(gpu_times[i]),"us", "+-",xp.std(gpu_times[i]),"ms")
     
 
 
