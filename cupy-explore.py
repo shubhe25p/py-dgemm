@@ -32,7 +32,7 @@ def initialize_accel_arrays( nsize, A, B):
     j, k= cupy.mgrid[0:nsize, 0:nsize]
 
     A[:], B[:] = cupy_fuse_kernel(j, k)
-    #cupy.cuda.runtime.deviceSynchronize()
+    cupy.cuda.runtime.deviceSynchronize()
 
 def matmul_loop(niterations, A, B, C, xp ):
 
