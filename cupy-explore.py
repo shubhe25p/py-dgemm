@@ -89,7 +89,9 @@ def create_arrays(nsize, xp ):
     t_end = time.time()
     deltat = t_end - t_start
 
-    initialize_accel_arrays( nsize, A, B )
+    for i in range(4):
+        xp.cuda.runtime.setDevice(i)
+        initialize_accel_arrays( nsize, A, B )
 
     print("Time for Array Initialization (sec): {:.3f}".format( deltat ) )
     print("CUDA DEVICE=",xp.cuda.get_device_id())
@@ -203,15 +205,15 @@ def main():
     xp.cuda.runtime.setDevice(device)
     #choose the appropriate numpy-like interface:
     [ A, B, C ] = create_arrays( nsize, xp )
-    delta_num = matmul_loop( niterations, A, B, C, xp )
-    gpu_times = matmul_loop_async(niterations, A, B, C, xp, devices=(device,))
-    # for i in range(4):
-    print("GPU ASYNC Profiling",device,"=",xp.mean(gpu_times[0]),"ms", "stddev=",xp.std(gpu_times[0]),"ms")
+    # delta_num = matmul_loop( niterations, A, B, C, xp )
+    gpu_times = matmul_loop_async(niterations, A, B, C, xp, devices=(0,1,2,3))
+    for i in range(4):
+        print("GPU ASYNC Profiling",device,"=",xp.mean(gpu_times[i]),"ms", "stddev=",xp.std(gpu_times[0]),"ms")
     
 
 
     # if correctness test has passed, report performance
-    report_performance( niterations, nsize, delta_num)
+    # report_performance( niterations, nsize, delta_num)
     #print(benchmark(xp.matmul, (A, B, C), n_repeat=niterations, devices=(0,1,2,3)))
 if __name__ == '__main__':
     main()
