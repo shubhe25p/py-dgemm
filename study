@@ -1,5 +1,5 @@
 Requested Arguments:
-  niterations : 10
+  niterations : 100
   nsize       : 5004
   accelerator : True
   testseed    : None
@@ -8,266 +8,286 @@ Using accelerated numpy:
   <module 'cupy' from '/global/common/software/nersc/pe/conda-envs/24.1.0/python-3.11/nersc-python/lib/python3.11/site-packages/cupy/__init__.py'>
 
 CUDA DEVICE= 0
+Size of matrix:  1024
 Preparing Matrix arrays
 Memory required: 24.000 MB
-Time for Array Allocation (sec): 0.000538
+Time for Array Allocation (sec): 0.000544
 Time for Array Initialization (sec): 0.069
 Running matmul...
-Synchronization Overhead (sec): 4.05e-06
-First of 10 iterations (sec): 0.024474
+Synchronization Overhead (sec): 3.81e-06
+First of 100 iterations (sec): 0.025326
 FlopCount: 2.506506e+11
 Iteration (int)   Time(s) Gflop/s
-First (0)         0.02447 10241.4
-Last (9)          0.00020 1236829.0
-Best (9)          0.00020 1236829.0
-GPU AVG NORMAL TIME= 1049609.36
+First (0)         0.02533  9897.1
+Last (99)         0.00021 1221027.5
+Best (97)         0.00020 1229596.1
+GPU AVG NORMAL TIME= 1192627.68
+Size of matrix:  2048
 Preparing Matrix arrays
 Memory required: 96.000 MB
-Time for Array Allocation (sec): 0.000424
-Time for Array Initialization (sec): 0.001
+Time for Array Allocation (sec): 0.000467
+Time for Array Initialization (sec): 0.002
 Running matmul...
-Synchronization Overhead (sec): 3.58e-06
-First of 10 iterations (sec): 0.001284
+Synchronization Overhead (sec): 3.34e-06
+First of 100 iterations (sec): 0.001312
 FlopCount: 2.506506e+11
 Iteration (int)   Time(s) Gflop/s
-First (0)         0.00128 195228.3
-Last (9)          0.00112 223634.3
-Best (8)          0.00112 224541.8
-GPU AVG NORMAL TIME= 220586.11
+First (0)         0.00131 191076.8
+Last (99)         0.00101 247365.8
+Best (95)         0.00101 247598.8
+GPU AVG NORMAL TIME= 225422.55
+Size of matrix:  4096
 Preparing Matrix arrays
 Memory required: 384.000 MB
-Time for Array Allocation (sec): 0.000555
+Time for Array Allocation (sec): 0.004205
 Time for Array Initialization (sec): 0.002
 Running matmul...
 Synchronization Overhead (sec): 3.10e-06
-First of 10 iterations (sec): 0.008029
+First of 100 iterations (sec): 0.007272
 FlopCount: 2.506506e+11
 Iteration (int)   Time(s) Gflop/s
-First (0)         0.00803 31216.4
-Last (9)          0.00800 31334.5
-Best (6)          0.00799 31379.4
-GPU AVG NORMAL TIME= 31323.38
+First (0)         0.00727 34467.9
+Last (99)         0.00720 34790.7
+Best (30)         0.00713 35158.3
+GPU AVG NORMAL TIME= 34758.48
+Size of matrix:  8192
 Preparing Matrix arrays
 Memory required: 1.500 GB
-Time for Array Allocation (sec): 0.001774
-Time for Array Initialization (sec): 0.008
-Running matmul...
-Synchronization Overhead (sec): 3.58e-06
-First of 10 iterations (sec): 0.063134
-FlopCount: 2.506506e+11
-Iteration (int)   Time(s) Gflop/s
-First (0)         0.06313  3970.1
-Last (9)          0.05668  4422.6
-Best (9)          0.05668  4422.6
-GPU AVG NORMAL TIME= 4269.18
-Preparing Matrix arrays
-Memory required: 6.000 GB
-Time for Array Allocation (sec): 0.005704
-Time for Array Initialization (sec): 0.035
+Time for Array Allocation (sec): 0.010448
+Time for Array Initialization (sec): 0.016
 Running matmul...
 Synchronization Overhead (sec): 3.34e-06
-First of 10 iterations (sec): 0.453290
+First of 100 iterations (sec): 0.056962
 FlopCount: 2.506506e+11
 Iteration (int)   Time(s) Gflop/s
-First (0)         0.45329   553.0
-Last (9)          0.45318   553.1
-Best (7)          0.45317   553.1
-GPU AVG NORMAL TIME=  553.03
+First (0)         0.05696  4400.3
+Last (99)         0.05692  4403.6
+Best (55)         0.05691  4404.1
+GPU AVG NORMAL TIME= 4403.56
+Size of matrix:  16384
+Preparing Matrix arrays
+Memory required: 6.000 GB
+Time for Array Allocation (sec): 0.004135
+Time for Array Initialization (sec): 0.041
+Running matmul...
+Synchronization Overhead (sec): 3.10e-06
+First of 100 iterations (sec): 0.453171
+FlopCount: 2.506506e+11
+Iteration (int)   Time(s) Gflop/s
+First (0)         0.45317   553.1
+Last (99)         0.45308   553.2
+Best (94)         0.45307   553.2
+GPU AVG NORMAL TIME=  553.18
 CUDA DEVICE= 1
+Size of matrix:  1024
 Preparing Matrix arrays
 Memory required: 24.000 MB
-Time for Array Allocation (sec): 0.000433
+Time for Array Allocation (sec): 0.000432
 Time for Array Initialization (sec): 0.014
 Running matmul...
 Synchronization Overhead (sec): 3.58e-06
-First of 10 iterations (sec): 0.011867
+First of 100 iterations (sec): 0.011750
 FlopCount: 2.506506e+11
 Iteration (int)   Time(s) Gflop/s
-First (0)         0.01187 21122.0
-Last (9)          0.00021 1215381.1
-Best (6)          0.00021 1218197.7
-GPU AVG NORMAL TIME= 1063807.73
+First (0)         0.01175 21332.9
+Last (99)         0.00020 1226726.5
+Best (68)         0.00020 1272765.9
+GPU AVG NORMAL TIME= 1213790.84
+Size of matrix:  2048
 Preparing Matrix arrays
 Memory required: 96.000 MB
-Time for Array Allocation (sec): 0.000473
+Time for Array Allocation (sec): 0.000433
 Time for Array Initialization (sec): 0.001
 Running matmul...
-Synchronization Overhead (sec): 3.34e-06
-First of 10 iterations (sec): 0.001232
+Synchronization Overhead (sec): 3.10e-06
+First of 100 iterations (sec): 0.001214
 FlopCount: 2.506506e+11
 Iteration (int)   Time(s) Gflop/s
-First (0)         0.00123 203386.5
-Last (9)          0.00113 222404.2
-Best (6)          0.00112 224493.8
-GPU AVG NORMAL TIME= 220898.59
+First (0)         0.00121 206502.6
+Last (99)         0.00101 247307.6
+Best (74)         0.00101 247715.5
+GPU AVG NORMAL TIME= 230661.21
+Size of matrix:  4096
 Preparing Matrix arrays
 Memory required: 384.000 MB
 Time for Array Allocation (sec): 0.000608
 Time for Array Initialization (sec): 0.002
 Running matmul...
 Synchronization Overhead (sec): 2.86e-06
-First of 10 iterations (sec): 0.008065
+First of 100 iterations (sec): 0.007286
 FlopCount: 2.506506e+11
 Iteration (int)   Time(s) Gflop/s
-First (0)         0.00806 31078.9
-Last (9)          0.00804 31194.1
-Best (9)          0.00804 31194.1
-GPU AVG NORMAL TIME= 31161.25
+First (0)         0.00729 34403.6
+Last (99)         0.00726 34546.0
+Best (27)         0.00718 34918.9
+GPU AVG NORMAL TIME= 34548.34
+Size of matrix:  8192
 Preparing Matrix arrays
 Memory required: 1.500 GB
-Time for Array Allocation (sec): 0.001812
+Time for Array Allocation (sec): 0.001704
 Time for Array Initialization (sec): 0.008
-Running matmul...
-Synchronization Overhead (sec): 3.58e-06
-First of 10 iterations (sec): 0.058254
-FlopCount: 2.506506e+11
-Iteration (int)   Time(s) Gflop/s
-First (0)         0.05825  4302.8
-Last (9)          0.05714  4387.0
-Best (4)          0.05683  4410.2
-GPU AVG NORMAL TIME= 4379.94
-Preparing Matrix arrays
-Memory required: 6.000 GB
-Time for Array Allocation (sec): 0.004014
-Time for Array Initialization (sec): 0.038
-Running matmul...
-Synchronization Overhead (sec): 3.58e-06
-First of 10 iterations (sec): 0.455164
-FlopCount: 2.506506e+11
-Iteration (int)   Time(s) Gflop/s
-First (0)         0.45516   550.7
-Last (9)          0.45594   549.7
-Best (6)          0.45500   550.9
-GPU AVG NORMAL TIME=  550.26
-CUDA DEVICE= 2
-Preparing Matrix arrays
-Memory required: 24.000 MB
-Time for Array Allocation (sec): 0.000422
-Time for Array Initialization (sec): 0.013
-Running matmul...
-Synchronization Overhead (sec): 3.34e-06
-First of 10 iterations (sec): 0.011711
-FlopCount: 2.506506e+11
-Iteration (int)   Time(s) Gflop/s
-First (0)         0.01171 21403.7
-Last (9)          0.00020 1259047.5
-Best (8)          0.00020 1268160.0
-GPU AVG NORMAL TIME= 1106082.94
-Preparing Matrix arrays
-Memory required: 96.000 MB
-Time for Array Allocation (sec): 0.000473
-Time for Array Initialization (sec): 0.002
-Running matmul...
-Synchronization Overhead (sec): 3.34e-06
-First of 10 iterations (sec): 0.001173
-FlopCount: 2.506506e+11
-Iteration (int)   Time(s) Gflop/s
-First (0)         0.00117 213593.0
-Last (9)          0.00107 234980.9
-Best (9)          0.00107 234980.9
-GPU AVG NORMAL TIME= 231653.82
-Preparing Matrix arrays
-Memory required: 384.000 MB
-Time for Array Allocation (sec): 0.000632
-Time for Array Initialization (sec): 0.002
-Running matmul...
-Synchronization Overhead (sec): 3.81e-06
-First of 10 iterations (sec): 0.007627
-FlopCount: 2.506506e+11
-Iteration (int)   Time(s) Gflop/s
-First (0)         0.00763 32862.5
-Last (9)          0.00762 32912.9
-Best (7)          0.00760 32997.6
-GPU AVG NORMAL TIME= 32943.93
-Preparing Matrix arrays
-Memory required: 1.500 GB
-Time for Array Allocation (sec): 0.001719
-Time for Array Initialization (sec): 0.008
-Running matmul...
-Synchronization Overhead (sec): 3.34e-06
-First of 10 iterations (sec): 0.059536
-FlopCount: 2.506506e+11
-Iteration (int)   Time(s) Gflop/s
-First (0)         0.05954  4210.1
-Last (9)          0.05694  4401.7
-Best (5)          0.05667  4422.8
-GPU AVG NORMAL TIME= 4360.85
-Preparing Matrix arrays
-Memory required: 6.000 GB
-Time for Array Allocation (sec): 0.004225
-Time for Array Initialization (sec): 0.039
-Running matmul...
-Synchronization Overhead (sec): 3.34e-06
-First of 10 iterations (sec): 0.453921
-FlopCount: 2.506506e+11
-Iteration (int)   Time(s) Gflop/s
-First (0)         0.45392   552.2
-Last (9)          0.45364   552.5
-Best (8)          0.45362   552.6
-GPU AVG NORMAL TIME=  552.41
-CUDA DEVICE= 3
-Preparing Matrix arrays
-Memory required: 24.000 MB
-Time for Array Allocation (sec): 0.000433
-Time for Array Initialization (sec): 0.014
-Running matmul...
-Synchronization Overhead (sec): 3.34e-06
-First of 10 iterations (sec): 0.011626
-FlopCount: 2.506506e+11
-Iteration (int)   Time(s) Gflop/s
-First (0)         0.01163 21559.0
-Last (9)          0.00025 1006996.8
-Best (8)          0.00021 1216787.8
-GPU AVG NORMAL TIME= 1040473.75
-Preparing Matrix arrays
-Memory required: 96.000 MB
-Time for Array Allocation (sec): 0.000452
-Time for Array Initialization (sec): 0.001
-Running matmul...
-Synchronization Overhead (sec): 2.86e-06
-First of 10 iterations (sec): 0.001227
-FlopCount: 2.506506e+11
-Iteration (int)   Time(s) Gflop/s
-First (0)         0.00123 204295.5
-Last (9)          0.00112 223634.3
-Best (9)          0.00112 223634.3
-GPU AVG NORMAL TIME= 220538.41
-Preparing Matrix arrays
-Memory required: 384.000 MB
-Time for Array Allocation (sec): 0.000573
-Time for Array Initialization (sec): 0.002
 Running matmul...
 Synchronization Overhead (sec): 3.10e-06
-First of 10 iterations (sec): 0.008054
+First of 100 iterations (sec): 0.057116
 FlopCount: 2.506506e+11
 Iteration (int)   Time(s) Gflop/s
-First (0)         0.00805 31119.3
-Last (9)          0.00804 31168.2
-Best (3)          0.00803 31202.5
-GPU AVG NORMAL TIME= 31169.00
-Preparing Matrix arrays
-Memory required: 1.500 GB
-Time for Array Allocation (sec): 0.001718
-Time for Array Initialization (sec): 0.008
-Running matmul...
-Synchronization Overhead (sec): 3.34e-06
-First of 10 iterations (sec): 0.062945
-FlopCount: 2.506506e+11
-Iteration (int)   Time(s) Gflop/s
-First (0)         0.06294  3982.1
-Last (9)          0.05693  4403.0
-Best (6)          0.05686  4407.9
-GPU AVG NORMAL TIME= 4253.60
+First (0)         0.05712  4388.4
+Last (99)         0.05721  4381.6
+Best (49)         0.05708  4390.9
+GPU AVG NORMAL TIME= 4385.74
+Size of matrix:  16384
 Preparing Matrix arrays
 Memory required: 6.000 GB
-Time for Array Allocation (sec): 0.003917
+Time for Array Allocation (sec): 0.007123
 Time for Array Initialization (sec): 0.041
 Running matmul...
 Synchronization Overhead (sec): 3.34e-06
-First of 10 iterations (sec): 0.453823
+First of 100 iterations (sec): 0.457754
 FlopCount: 2.506506e+11
 Iteration (int)   Time(s) Gflop/s
-First (0)         0.45382   552.3
-Last (9)          0.45382   552.3
-Best (4)          0.45377   552.4
-GPU AVG NORMAL TIME=  552.33
+First (0)         0.45775   547.6
+Last (99)         0.45928   545.7
+Best (82)         0.45567   550.1
+GPU AVG NORMAL TIME=  546.87
+CUDA DEVICE= 2
+Size of matrix:  1024
+Preparing Matrix arrays
+Memory required: 24.000 MB
+Time for Array Allocation (sec): 0.000420
+Time for Array Initialization (sec): 0.015
+Running matmul...
+Synchronization Overhead (sec): 3.81e-06
+First of 100 iterations (sec): 0.011837
+FlopCount: 2.506506e+11
+Iteration (int)   Time(s) Gflop/s
+First (0)         0.01184 21175.2
+Last (99)         0.00020 1269691.6
+Best (51)         0.00020 1274308.7
+GPU AVG NORMAL TIME= 1226729.80
+Size of matrix:  2048
+Preparing Matrix arrays
+Memory required: 96.000 MB
+Time for Array Allocation (sec): 0.000438
+Time for Array Initialization (sec): 0.001
+Running matmul...
+Synchronization Overhead (sec): 2.86e-06
+First of 100 iterations (sec): 0.001214
+FlopCount: 2.506506e+11
+Iteration (int)   Time(s) Gflop/s
+First (0)         0.00121 206502.6
+Last (99)         0.00112 223539.2
+Best (39)         0.00111 225650.3
+GPU AVG NORMAL TIME= 224603.09
+Size of matrix:  4096
+Preparing Matrix arrays
+Memory required: 384.000 MB
+Time for Array Allocation (sec): 0.000589
+Time for Array Initialization (sec): 0.002
+Running matmul...
+Synchronization Overhead (sec): 3.34e-06
+First of 100 iterations (sec): 0.007990
+FlopCount: 2.506506e+11
+Iteration (int)   Time(s) Gflop/s
+First (0)         0.00799 31369.1
+Last (99)         0.00721 34742.4
+Best (78)         0.00713 35160.7
+GPU AVG NORMAL TIME= 33910.59
+Size of matrix:  8192
+Preparing Matrix arrays
+Memory required: 1.500 GB
+Time for Array Allocation (sec): 0.001788
+Time for Array Initialization (sec): 0.008
+Running matmul...
+Synchronization Overhead (sec): 3.10e-06
+First of 100 iterations (sec): 0.056969
+FlopCount: 2.506506e+11
+Iteration (int)   Time(s) Gflop/s
+First (0)         0.05697  4399.8
+Last (99)         0.05693  4402.9
+Best (60)         0.05693  4403.1
+GPU AVG NORMAL TIME= 4402.11
+Size of matrix:  16384
+Preparing Matrix arrays
+Memory required: 6.000 GB
+Time for Array Allocation (sec): 0.004261
+Time for Array Initialization (sec): 0.038
+Running matmul...
+Synchronization Overhead (sec): 3.10e-06
+First of 100 iterations (sec): 0.453800
+FlopCount: 2.506506e+11
+Iteration (int)   Time(s) Gflop/s
+First (0)         0.45380   552.3
+Last (99)         0.45355   552.6
+Best (96)         0.45345   552.8
+GPU AVG NORMAL TIME=  552.50
+CUDA DEVICE= 3
+Size of matrix:  1024
+Preparing Matrix arrays
+Memory required: 24.000 MB
+Time for Array Allocation (sec): 0.000423
+Time for Array Initialization (sec): 0.014
+Running matmul...
+Synchronization Overhead (sec): 3.58e-06
+First of 100 iterations (sec): 0.011795
+FlopCount: 2.506506e+11
+Iteration (int)   Time(s) Gflop/s
+First (0)         0.01179 21251.4
+Last (99)         0.00020 1272765.9
+Best (79)         0.00020 1278959.4
+GPU AVG NORMAL TIME= 1220385.07
+Size of matrix:  2048
+Preparing Matrix arrays
+Memory required: 96.000 MB
+Time for Array Allocation (sec): 0.000457
+Time for Array Initialization (sec): 0.001
+Running matmul...
+Synchronization Overhead (sec): 2.86e-06
+First of 100 iterations (sec): 0.001215
+FlopCount: 2.506506e+11
+Iteration (int)   Time(s) Gflop/s
+First (0)         0.00121 206340.5
+Last (99)         0.00111 225022.4
+Best (38)         0.00111 225311.8
+GPU AVG NORMAL TIME= 224233.92
+Size of matrix:  4096
+Preparing Matrix arrays
+Memory required: 384.000 MB
+Time for Array Allocation (sec): 0.000563
+Time for Array Initialization (sec): 0.002
+Running matmul...
+Synchronization Overhead (sec): 2.62e-06
+First of 100 iterations (sec): 0.008057
+FlopCount: 2.506506e+11
+Iteration (int)   Time(s) Gflop/s
+First (0)         0.00806 31111.1
+Last (99)         0.00721 34749.3
+Best (50)         0.00714 35093.8
+GPU AVG NORMAL TIME= 33919.04
+Size of matrix:  8192
+Preparing Matrix arrays
+Memory required: 1.500 GB
+Time for Array Allocation (sec): 0.001713
+Time for Array Initialization (sec): 0.008
+Running matmul...
+Synchronization Overhead (sec): 3.10e-06
+First of 100 iterations (sec): 0.056944
+FlopCount: 2.506506e+11
+Iteration (int)   Time(s) Gflop/s
+First (0)         0.05694  4401.7
+Last (99)         0.05693  4403.1
+Best (85)         0.05692  4403.8
+GPU AVG NORMAL TIME= 4403.25
+Size of matrix:  16384
+Preparing Matrix arrays
+Memory required: 6.000 GB
+Time for Array Allocation (sec): 0.004020
+Time for Array Initialization (sec): 0.037
+Running matmul...
+Synchronization Overhead (sec): 3.81e-06
+First of 100 iterations (sec): 0.453770
+FlopCount: 2.506506e+11
+Iteration (int)   Time(s) Gflop/s
+First (0)         0.45377   552.4
+Last (99)         0.45355   552.6
+Best (70)         0.45347   552.7
+GPU AVG NORMAL TIME=  552.50

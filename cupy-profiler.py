@@ -232,6 +232,7 @@ def main():
         xp.cuda.runtime.setDevice(i)
         print("CUDA DEVICE=",xp.cuda.get_device_id())
         for asize in [1024, 2048, 4096, 8192, 16384]:
+            print("Size of matrix: ",asize)
             [ A, B, C ] = create_arrays( asize, xp )
             deltat_matmul = matmul_loop( niterations, A, B, C, xp )
 
