@@ -70,7 +70,7 @@ def matmul_loop(niterations, A, B, C, xp ):
 #// Function: create_arrays
 #// allocate matrices and call their initialization functions
 #// -----
-def create_arrays(nsize, xp ):
+def create_arrays(nsize, xp, devices ):
 
     def memory_string( memory_bytes ):
         units = ' kMGTPX'
@@ -82,7 +82,7 @@ def create_arrays(nsize, xp ):
     print("Preparing Matrix arrays")
     print("Memory required: {}".format( memory_string( 3 * nsize * nsize * 8 ) ) )
 
-    for i in range(4):
+    for i in range(devices):
         xp.cuda.runtime.setDevice(i)
         A = xp.zeros((nsize,nsize))
         B = xp.zeros((nsize,nsize))
@@ -198,7 +198,7 @@ def main():
     device      = args.device
     
     #choose the appropriate numpy-like interface:
-    [ A, B, C ] = create_arrays( nsize, xp )
+    [ A, B, C ] = create_arrays( nsize, xp, devices=(3,2,1,0) )
     # delta_num = matmul_loop( niterations, A, B, C, xp )
     gpu_times = matmul_loop_async(niterations, A, B, C, xp, devices=(3,2,1,0))
     for i in range(4):
