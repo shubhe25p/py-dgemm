@@ -32,7 +32,7 @@ def initialize_accel_arrays( nsize, A, B):
     j, k= cupy.mgrid[0:nsize, 0:nsize]
 
     A[:], B[:] = cupy_fuse_kernel(j, k)
-    cupy.cuda.runtime.deviceSynchronize()
+    #cupy.cuda.runtime.deviceSynchronize()
 
 def matmul_loop(niterations, A, B, C, xp ):
 
@@ -197,13 +197,12 @@ def main():
     nsize       = args.nsize
     device      = args.device
     
-    xp.cuda.runtime.setDevice(device)
     #choose the appropriate numpy-like interface:
     [ A, B, C ] = create_arrays( nsize, xp )
     # delta_num = matmul_loop( niterations, A, B, C, xp )
-    gpu_times = matmul_loop_async(niterations, A, B, C, xp, devices=(0,1,2,3))
+    gpu_times = matmul_loop_async(niterations, A, B, C, xp, devices=(3,2,1,0))
     for i in range(4):
-        print("GPU ASYNC Profiling device ",i,"=",xp.mean(gpu_times[i]),"us", "+-",xp.std(gpu_times[i]),"ms")
+        print("GPU ASYNC Profiling device ",i,"=",xp.mean(gpu_times[i]),"us", "+-",xp.std(gpu_times[i]),"us")
     
 
 
