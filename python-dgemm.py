@@ -273,12 +273,8 @@ def main():
     #create working arrays on the target processor ( host or accelerator )
     [ A, B, C ] = create_arrays( nsize, xp )
     
-    threads = [64, 128, 256, 512, 1024, 2048]
-    for thread in threads:
-        os.environ["OMP_NUM_THREADS"] = str(thread)
-        print("OMP_NUM_THREADS: ", os.environ["OMP_NUM_THREADS"])
         # run the matmul
-        deltat_matmul = matmul_loop( niterations, A, B, C, xp )
+    deltat_matmul = matmul_loop( niterations, A, B, C, xp )
     # do matmul (dgemm) 
     # deltat_matmul = matmul_loop( niterations, A, B, C, xp )
 
