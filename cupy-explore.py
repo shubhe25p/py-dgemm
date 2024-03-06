@@ -198,7 +198,7 @@ def main():
     device      = args.device
     
     #choose the appropriate numpy-like interface:
-    devices = (0,1)
+    devices = (0,1,2,3)
     [ A, B, C ] = create_arrays( nsize, xp, devices )
     # delta_num = matmul_loop( niterations, A, B, C, xp )
     gpu_times = matmul_loop_async(niterations, A, B, C, xp, devices)
