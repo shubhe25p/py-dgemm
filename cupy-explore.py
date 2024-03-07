@@ -5,8 +5,8 @@ import argparse
 import math
 import numpy as np
 
-import cupy as xp
-
+import cupy
+xp=cupy
 
 def initialize_accel_arrays( nsize, A, B):
 
