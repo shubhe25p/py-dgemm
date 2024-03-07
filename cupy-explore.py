@@ -120,11 +120,6 @@ def matmul_loop_async(niterations, A, B, C, xp, devices):
 
     gpu_times=[[] for i in e1]
 
-    # for e, device in zip(e1, devices):
-    #     xp.cuda.runtime.setDevice(device)
-    #     e.record()
-    #     e.synchronize()
-
     for i in range(niterations):
         for e, device in zip(e1, devices):
             xp.cuda.runtime.setDevice(device)
@@ -135,9 +130,6 @@ def matmul_loop_async(niterations, A, B, C, xp, devices):
         for e, device in zip(e2,devices):
             xp.cuda.runtime.setDevice(device)
             e.record()
-
-        for e, device in zip(e2,devices):
-            xp.cuda.runtime.setDevice(device)
             e.synchronize()
 
         for i, (ev1, ev2) in enumerate(zip(e1, e2)):
