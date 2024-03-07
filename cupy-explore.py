@@ -99,7 +99,7 @@ def matmul_loop_async(niterations, A, B, C, xp, devices):
 
     
 #// Function: report_performance
-def report_performance(niterations, nsize, gpu_times, devices, xp):
+def report_performance(nsize, gpu_times, devices, xp):
   
 
     flops = (2*nsize**3+ 2*nsize*nsize)  
@@ -109,12 +109,12 @@ def report_performance(niterations, nsize, gpu_times, devices, xp):
     print("Timing Report")
     for i in devices:
         print("GPU device ",i,"=",xp.mean(gpu_times[i]), "+-",xp.std(gpu_times[i]),"us", 
-              "(",xp.min(gpu_times[i]),"-",xp.max(gpu_times[i]),")")
+              "(min: ",xp.min(gpu_times[i])," max: ",xp.max(gpu_times[i]),")")
     
     print("GLOPS Report")
     for i in devices:
-        print("GFLOPS device ",i,"=",xp.mean(gflops[i]), "+-",xp.std(gflops[i]),"GFLOPS",
-                "(",xp.min(gflops[i]),"-",xp.max(gflops[i]),")")
+        print("GFLOPS device ",i,"=",xp.mean(xp.asarray(gflops[i])), "+-",xp.std(xp.asarray(gflops[i])),"GFLOPS",
+                "(",xp.min(xp.asarray(gflops[i])),"-",xp.max(xp.asarray(gflops[i])),")")
 
 #// -----
 #// Function: get_args
@@ -160,7 +160,7 @@ def main():
     
     [ A, B, C ] = create_arrays( nsize, xp, devices )
     gpu_times = matmul_loop_async(niterations, A, B, C, xp, devices)
-    report_performance( niterations, nsize, gpu_times, devices, xp)
+    report_performance(nsize, gpu_times, devices, xp)
 
 if __name__ == '__main__':
     main()
