@@ -115,7 +115,7 @@ def matmul_loop_async(niterations, A, B, C, xp, devices):
         e2.append(xp.cuda.stream.Event())
 
     print("Warming up all GPUs a bit")
-    for i in device:
+    for i in devices:
         xp.cuda.runtime.setDevice(i)
         for i in range(10):
             xp.matmul(A,B,C)
