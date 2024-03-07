@@ -114,7 +114,7 @@ def report_performance(nsize, gpu_times, devices, xp):
     print("GLOPS Report")
     for i in devices:
         print("GFLOPS device ",i,"=",xp.mean(xp.asarray(gflops[i])), "+-",xp.std(xp.asarray(gflops[i])),"GFLOPS",
-                "(",xp.min(xp.asarray(gflops[i])),"-",xp.max(xp.asarray(gflops[i])),")")
+                "(min: ",xp.min(xp.asarray(gflops[i])),"max: ",xp.max(xp.asarray(gflops[i])),")")
 
 #// -----
 #// Function: get_args
