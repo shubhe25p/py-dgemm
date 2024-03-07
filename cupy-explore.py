@@ -5,20 +5,7 @@ import argparse
 import math
 import numpy as np
 
-import cupy 
-xp = cupy
-from cupyx.profiler import benchmark
-        
-
-#// -----
-#// Function: initialize_accel_arrays
-#// Initialize matrices using accelerator memory/processor
-#// Here, cupy arrays are used to run this custom kernel on 
-#// May be modified for non-cupy
-#// -----
-def synchronize_host_accel():
-    if accelerator:
-        cupy.cuda.runtime.deviceSynchronize()
+import cupy as xp
 
 
 def initialize_accel_arrays( nsize, A, B):
@@ -34,37 +21,6 @@ def initialize_accel_arrays( nsize, A, B):
     A[:], B[:] = cupy_fuse_kernel(j, k)
     cupy.cuda.runtime.deviceSynchronize()
 
-def matmul_loop(niterations, A, B, C, xp ):
-
-
-    print("Running matmul...")
-
-    tstart = time.time()
-    synchronize_host_accel()
-    tend = time.time()
-    deltat = tend - tstart
-    print("Synchronization Overhead (sec): {:.2e}".format( deltat ) )
-       
-    deltat = np.zeros( niterations )
-    for i in range(niterations):
-
-        synchronize_host_accel()
-        tstart = time.time()
-
-        xp.matmul(A, B, out=C )
-
-        synchronize_host_accel()
-        tend = time.time()
-
-        deltat[i] = tend - tstart
-
-        if( i==0 ):
-            print("First of {:d} iterations (sec): {:.6f}".format( niterations, deltat[0] ) )
-
-    # sanity check array type
-    #print("type of C:", type(C))
-
-    return deltat
 
 #// -----
 #// Function: create_arrays
@@ -82,6 +38,7 @@ def create_arrays(nsize, xp, devices ):
     print("Preparing Matrix arrays")
     print("Memory required: {}".format( memory_string( 3 * nsize * nsize * 8 ) ) )
 
+    print("Intializing Arrays in all devices")
     for i in devices:
         xp.cuda.runtime.setDevice(i)
         A = xp.zeros((nsize,nsize))
@@ -89,7 +46,6 @@ def create_arrays(nsize, xp, devices ):
         C = xp.zeros((nsize,nsize))
         initialize_accel_arrays( nsize, A, B )
 
-    print("CUDA DEVICE=",xp.cuda.get_device_id())
     return A, B, C
 
 
@@ -130,29 +86,35 @@ def matmul_loop_async(niterations, A, B, C, xp, devices):
         for e, device in zip(e2,devices):
             xp.cuda.runtime.setDevice(device)
             e.record()
+
+        for e, device in zip(e2,devices):
+            xp.cuda.runtime.setDevice(device)
             e.synchronize()
 
         for i, (ev1, ev2) in enumerate(zip(e1, e2)):
             gpu_t = xp.cuda.get_elapsed_time(ev1, ev2) * 1e3
             gpu_times[i].append(gpu_t)
 
-    print("CUDA DEVICE=",xp.cuda.get_device_id())
     return np.asarray(gpu_times, dtype=np.float64)
 
     
 #// Function: report_performance
-def report_performance(niterations, nsize, deltat_matmul ):
+def report_performance(niterations, nsize, gpu_times, devices, xp):
   
 
     flops = (2*nsize**3+ 2*nsize*nsize)  
-    gflops = [ flops / t / 1.0e3 for t in deltat_matmul ]
 
-    print("GPU AVG CPU TIME= {:7.2f}".format(xp.mean(np.asarray(deltat_matmul)*1e6)))
+    gflops = [[ flops / t / 1.0e3 for t in gpu_times[i]] for i in devices]
 
-
-    #print("GLOPS AVG NORMAL TIME= {:7.2f}".format(xp.mean(np.asarray(gflops))))
-    #xp.set_printoptions(precision=2)
-    #print(gflops)
+    print("Timing Report")
+    for i in devices:
+        print("GPU device ",i,"=",xp.mean(gpu_times[i]), "+-",xp.std(gpu_times[i]),"us", 
+              "(",xp.min(gpu_times[i]),"-",xp.max(gpu_times[i]),")")
+    
+    print("GLOPS Report")
+    for i in devices:
+        print("GFLOPS device ",i,"=",xp.mean(gflops[i]), "+-",xp.std(gflops[i]),"GFLOPS",
+                "(",xp.min(gflops[i]),"-",xp.max(gflops[i]),")")
 
 #// -----
 #// Function: get_args
@@ -164,12 +126,14 @@ def get_args():
     parser.add_argument("--niterations", type=int, required=False, default=10, help="number of iterations")
     parser.add_argument("--nsize", type=int, required=False, default=5004, help="dimension of square matrix")
     parser.add_argument("--device", type=int, required=False, default=0, help="device to use")
+    parser.add_argument("--device-all", required=False, default=False, action='store_true', help="use all available devices")
     args = parser.parse_args()
 
     print("Requested Arguments:")
     print("  {:12s}: {}".format( "niterations", args.niterations ))
     print("  {:12s}: {}".format( "nsize",       args.nsize       ))
-    print("  {:12s}: {}".format( "device",      args.device      ))
+    if(not args.device_all):
+        print("  {:12s}: {}".format( "device",      args.device      ))
     
     return args
 
@@ -189,19 +153,15 @@ def main():
     nsize       = args.nsize
     device      = args.device
     
-    #choose the appropriate numpy-like interface:
-    devices = (0,1,2,3)
-    [ A, B, C ] = create_arrays( nsize, xp, devices )
-    # delta_num = matmul_loop( niterations, A, B, C, xp )
-    gpu_times = matmul_loop_async(niterations, A, B, C, xp, devices)
-    for i in devices:
-        print("GPU ASYNC Profiling device ",i,"=",xp.mean(gpu_times[i]),"us", "+-",xp.std(gpu_times[i]),"us")
+    if args.device_all:
+        devices = (0,1,2,3)
+    else:
+        devices = (device,)
     
+    [ A, B, C ] = create_arrays( nsize, xp, devices )
+    gpu_times = matmul_loop_async(niterations, A, B, C, xp, devices)
+    report_performance( niterations, nsize, gpu_times, devices, xp)
 
-
-    # if correctness test has passed, report performance
-    # report_performance( niterations, nsize, delta_num)
-    #print(benchmark(xp.matmul, (A, B, C), n_repeat=niterations, devices=(0,1,2,3)))
 if __name__ == '__main__':
     main()
 
