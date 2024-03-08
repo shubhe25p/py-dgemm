@@ -95,7 +95,7 @@ def matmul_loop_async(niterations, A, B, C, xp, devices):
             gpu_t = xp.cuda.get_elapsed_time(ev1, ev2) * 1e3
             gpu_times[i].append(gpu_t)
 
-    return np.asarray(gpu_times, dtype=np.float64)
+    return xp.asarray(gpu_times, dtype=np.float64)
 
     
 #// Function: report_performance
