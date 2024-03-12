@@ -102,14 +102,14 @@ def create_arrays(nsize, xp ):
     print("Memory required: {}".format( memory_string( 3 * nsize * nsize * 8 ) ) )
 
     t_start = time.time()
-    A = xp.zeros((nsize,nsize))
-    B = xp.zeros((nsize,nsize))
-    C = xp.zeros((nsize,nsize))
+    A = xp.zeros((nsize,nsize), dtype=xp.int8)
+    B = xp.zeros((nsize,nsize), dtype=xp.int8)
+    C = xp.zeros((nsize,nsize), dtype=xp.int8)
     t_end = time.time()
     deltat = t_end - t_start
     print("Time for Array Allocation (sec): {:.6f}".format( deltat ) )
     
-
+    print("Array dtype: ", A.dtype)
     t_start = time.time()
     if accelerator:
         initialize_accel_arrays( nsize, A, B )
@@ -118,7 +118,7 @@ def create_arrays(nsize, xp ):
     t_end = time.time()
     deltat = t_end - t_start
     print("Time for Array Initialization (sec): {:.3f}".format( deltat ) )
-
+    print("Array dtype: ", A.dtype)
     return A, B, C
 
 
@@ -143,9 +143,10 @@ def matmul_loop(niterations, A, B, C, xp ):
     print("Synchronization Overhead (sec): {:.2e}".format( deltat ) )
        
     deltat = np.zeros( niterations )
-    print("Warming up CPUs a bit")
+    print("Warming up GPUs a bit")
     for i in range(100):
         xp.matmul(A, B, out=C)
+    
     for i in range(niterations):
 
         synchronize_host_accel()
