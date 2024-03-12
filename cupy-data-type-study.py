@@ -10,7 +10,7 @@ import os
 ##substitute your own!
 ##NumPy substitutes should be aliased to "xp"
 import cupy 
-
+xp=cupy
 #// -----
 #// Function: numpy_initializer
 #// Switch between numpy(np) or accelerated-numpy(xp).
