@@ -28,6 +28,7 @@ actual_avg_10 = 427.45
 actual_avg_100 = 516.43
 actual_avg_500 = 523.48
 actual_avg_1000 = 520.19
+print("max_10: ", max_10, "max_100: ", max_100, "max_500: ", max_500, "max_1000: ", max_1000)
 g.set(xlabel='Run Size', ylabel='GFLOPS', title='Run Size vs GFLOPS')
 plt.plot([0, 1, 2], [actual_avg_100, actual_avg_500, actual_avg_1000], marker='o', color='red', label='ACES Average')
 plt.plot([0, 1, 2], [avg_100, avg_500, avg_1000], marker='o', color='green', label='Average')
