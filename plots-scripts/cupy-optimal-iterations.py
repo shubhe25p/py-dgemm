@@ -14,8 +14,10 @@ data_10 = [3753.0516878073497, 17009.395256254724, 17172.513619197034, 17217.638
 
 g = sns.violinplot(data=[data_10, data_100, data_500, data_1000], inner="box", linewidth=1.5)
 sns.set(font_scale=1.25)
-g.set(xlabel='Iterations', ylabel='GFLOPs', title='Iterations vs GFLOPs on A100')
-
+#g.set(xlabel='Iterations', ylabel='GFLOPs', title='Iterations vs GFLOPs on A100')
+plt.xlabel('Number of Iterations', fontsize=15)
+plt.ylabel('GFLOPs', fontsize=15)
+plt.title('Iterations vs GFLOPs on A100', fontsize=15)
 g.set_xticklabels(['10', '100', '500', '1000'])
 # plt.savefig('violin2.png')
 # plt.legend()

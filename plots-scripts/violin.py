@@ -18,18 +18,20 @@ avg_10 = np.mean(data_10)
 avg_100 = np.mean(data_100)
 avg_500 = np.mean(data_500)
 avg_1000 = np.mean(data_1000)
-
 max_10 = np.max(data_10)
 max_100 = np.max(data_100)
 max_500 = np.max(data_500)
 max_1000 = np.max(data_1000)
-
 actual_avg_10 = 427.45
 actual_avg_100 = 516.43
 actual_avg_500 = 523.48
 actual_avg_1000 = 520.19
 print("max_10: ", max_10, "max_100: ", max_100, "max_500: ", max_500, "max_1000: ", max_1000)
-g.set(xlabel='Run Size', ylabel='GFLOPS', title='Run Size vs GFLOPS')
+#g.set(xlabel='Num of Iterations', ylabel='GFLOPs', title='Iterations vs GFLOPs')
+plt.xlabel('Num of Iterations', fontdict={'fontsize': 15})
+plt.ylabel('GFLOPs', fontdict={'fontsize': 15})
+sns.set_context("talk")
+plt.title('Iterations vs GFLOPs', fontdict={'fontsize': 15})
 plt.plot([0, 1, 2], [actual_avg_100, actual_avg_500, actual_avg_1000], marker='o', color='red', label='ACES Average')
 plt.plot([0, 1, 2], [avg_100, avg_500, avg_1000], marker='o', color='green', label='Average')
 plt.plot([0, 1, 2], [max_100, max_500, max_1000], marker='o', color='blue', label='Max')
