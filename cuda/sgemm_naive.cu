@@ -5,12 +5,12 @@
 #include <iostream>
 #include <vector>
 
-#define cudaCheck(ans) { cudaCheck((ans), __FILE__, __LINE__); }
-inline void cudaCheck(cudaError_t code, const char *file, int line, bool abort=true)
+#define gpuErrchk(ans) { gpuAssert((ans), __FILE__, __LINE__); }
+inline void gpuAssert(cudaError_t code, const char *file, int line, bool abort=true)
 {
-   if (code != cudaSuccess) 
+   if (code != cudaSuccess)
    {
-      fprintf(stderr,"cudaCheck: %s %s %d\n", cudaGetErrorString(code), file, line);
+      fprintf(stderr,"GPUassert: %s %s %d\n", cudaGetErrorString(code), file, line);
       if (abort) exit(code);
    }
 }
@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
   if (getenv("DEVICE") != NULL) {
     deviceIdx = atoi(getenv("DEVICE"));
   }
-  cudaCheck(cudaSetDevice(deviceIdx));
+  gpuErrchk(cudaSetDevice(deviceIdx));
 
   printf("Running kernel %d on device %d.\n", 0, deviceIdx);
 
