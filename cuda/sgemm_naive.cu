@@ -16,6 +16,12 @@ inline void gpuAssert(cudaError_t code, const char *file, int line, bool abort=t
 }
 const std::string errLogFile = "matrixValidationFailure.txt";
 
+void randomize_matrix(float *matrix, int size) {
+  for (int i = 0; i < size; i++) {
+    matrix[i] = (float)rand() / RAND_MAX;
+  }
+}
+
 int main(int argc, char **argv) {
 
   // get environment variable for device
@@ -39,49 +45,49 @@ int main(int argc, char **argv) {
 //     exit(EXIT_FAILURE);
 //   };
 
-//   // Using cudaEvent for gpu stream timing, cudaEvent is equivalent to
-//   // publishing event tasks in the target stream
-//   float elapsed_time;
-//   cudaEvent_t beg, end;
-//   cudaEventCreate(&beg);
-//   cudaEventCreate(&end);
+  // Using cudaEvent for gpu stream timing, cudaEvent is equivalent to
+  // publishing event tasks in the target stream
+  float elapsed_time;
+  cudaEvent_t beg, end;
+  cudaEventCreate(&beg);
+  cudaEventCreate(&end);
 
-//   // cuBLAS FLOPs ceiling is reached at 8192
-//   std::vector<int> SIZE = {128, 256, 512, 1024, 2048, 4096};
+  // cuBLAS FLOPs ceiling is reached at 8192
+  std::vector<int> SIZE = {128, 256, 512, 1024, 2048, 4096};
 
-//   long m, n, k, max_size;
-//   max_size = SIZE[SIZE.size() - 1];
-//   std::cout << "Max size: " << max_size << std::endl;
+  long m, n, k, max_size;
+  max_size = SIZE[SIZE.size() - 1];
+  std::cout << "Max size: " << max_size << std::endl;
 
-//   float alpha = 0.5, beta = 3.0; // GEMM input parameters, C=α*AB+β*C
+  float alpha = 0.5, beta = 3.0; // GEMM input parameters, C=α*AB+β*C
 
-//   float *A = nullptr, *B = nullptr, *C = nullptr,
-//         *C_ref = nullptr; // host matrices
-//   float *dA = nullptr, *dB = nullptr, *dC = nullptr,
-//         *dC_ref = nullptr; // device matrices
+  float *A = nullptr, *B = nullptr, *C = nullptr,
+        *C_ref = nullptr; // host matrices
+  float *dA = nullptr, *dB = nullptr, *dC = nullptr,
+        *dC_ref = nullptr; // device matrices
 
-//   A = (float *)malloc(sizeof(float) * max_size * max_size);
-//   B = (float *)malloc(sizeof(float) * max_size * max_size);
-//   C = (float *)malloc(sizeof(float) * max_size * max_size);
-//   C_ref = (float *)malloc(sizeof(float) * max_size * max_size);
+  A = (float *)malloc(sizeof(float) * max_size * max_size);
+  B = (float *)malloc(sizeof(float) * max_size * max_size);
+  C = (float *)malloc(sizeof(float) * max_size * max_size);
+  C_ref = (float *)malloc(sizeof(float) * max_size * max_size);
 
-//   randomize_matrix(A, max_size * max_size);
-//   randomize_matrix(B, max_size * max_size);
-//   randomize_matrix(C, max_size * max_size);
+  randomize_matrix(A, max_size * max_size);
+  randomize_matrix(B, max_size * max_size);
+  randomize_matrix(C, max_size * max_size);
 
-//   cudaCheck(cudaMalloc((void **)&dA, sizeof(float) * max_size * max_size));
-//   cudaCheck(cudaMalloc((void **)&dB, sizeof(float) * max_size * max_size));
-//   cudaCheck(cudaMalloc((void **)&dC, sizeof(float) * max_size * max_size));
-//   cudaCheck(cudaMalloc((void **)&dC_ref, sizeof(float) * max_size * max_size));
+  gpuErrchk(cudaMalloc((void **)&dA, sizeof(float) * max_size * max_size));
+  gpuErrchk(cudaMalloc((void **)&dB, sizeof(float) * max_size * max_size));
+  gpuErrchk(cudaMalloc((void **)&dC, sizeof(float) * max_size * max_size));
+  gpuErrchk(cudaMalloc((void **)&dC_ref, sizeof(float) * max_size * max_size));
 
-//   cudaCheck(cudaMemcpy(dA, A, sizeof(float) * max_size * max_size,
-//                        cudaMemcpyHostToDevice));
-//   cudaCheck(cudaMemcpy(dB, B, sizeof(float) * max_size * max_size,
-//                        cudaMemcpyHostToDevice));
-//   cudaCheck(cudaMemcpy(dC, C, sizeof(float) * max_size * max_size,
-//                        cudaMemcpyHostToDevice));
-//   cudaCheck(cudaMemcpy(dC_ref, C, sizeof(float) * max_size * max_size,
-//                        cudaMemcpyHostToDevice));
+  gpuErrchk(cudaMemcpy(dA, A, sizeof(float) * max_size * max_size,
+                       cudaMemcpyHostToDevice));
+  gpuErrchk(cudaMemcpy(dB, B, sizeof(float) * max_size * max_size,
+                       cudaMemcpyHostToDevice));
+  gpuErrchk(cudaMemcpy(dC, C, sizeof(float) * max_size * max_size,
+                       cudaMemcpyHostToDevice));
+  gpuErrchk(cudaMemcpy(dC_ref, C, sizeof(float) * max_size * max_size,
+                       cudaMemcpyHostToDevice));
 
 //   int repeat_times = 50;
 //   for (int size : SIZE) {
