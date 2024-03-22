@@ -18,7 +18,7 @@ int main(int argc, char **argv) {
   }
   cudaCheck(cudaSetDevice(deviceIdx));
 
-  printf("Running kernel %d on device %d.\n", kernel_num, deviceIdx);
+  printf("Running kernel %d on device %d.\n", 0, deviceIdx);
 
   // print some device info
   // CudaDeviceInfo();
