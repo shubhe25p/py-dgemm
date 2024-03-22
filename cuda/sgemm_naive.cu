@@ -5,8 +5,15 @@
 #include <iostream>
 #include <vector>
 
-#define cudaCheck(err) (cudaCheck(err, __FILE__, __LINE__))
-
+#define cudaCheck(ans) { cudaCheck((ans), __FILE__, __LINE__); }
+inline void cudaCheck(cudaError_t code, const char *file, int line, bool abort=true)
+{
+   if (code != cudaSuccess) 
+   {
+      fprintf(stderr,"cudaCheck: %s %s %d\n", cudaGetErrorString(code), file, line);
+      if (abort) exit(code);
+   }
+}
 const std::string errLogFile = "matrixValidationFailure.txt";
 
 int main(int argc, char **argv) {
