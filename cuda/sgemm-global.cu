@@ -28,7 +28,7 @@ void randomize_matrix(float *matrix, int size) {
 __global__ void sgemm_coalesce(int M, int N, int K, float alpha, const float *A,
                             const float *B, float beta, float *C) {
 
-    BLOCKSIZE = 32;                            
+    const uint BLOCKSIZE = 32;                            
    const int x = blockIdx.x * BLOCKSIZE + (threadIdx.x / BLOCKSIZE);
   const int y = blockIdx.y * BLOCKSIZE + (threadIdx.x % BLOCKSIZE);
   // if statement is necessary to make things work under tile quantization
