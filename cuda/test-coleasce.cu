@@ -18,7 +18,7 @@ __global__ void test_coleasce(int M, int N, int K, float alpha, const float *A,
 void run_test_coleasce(int M, int N, int K, float alpha, float *A, float *B,
                      float beta, float *C) {
   
-  test_coleasce<<<1, 1, 1>>>(M, N, K, alpha, A, B, beta, C);
+  test_coleasce<<<1, 8>>>(M, N, K, alpha, A, B, beta, C);
 }
 
 int main(int argc, char **argv) {
@@ -28,7 +28,6 @@ int main(int argc, char **argv) {
   if (getenv("DEVICE") != NULL) {
     deviceIdx = atoi(getenv("DEVICE"));
   }
-  gpuErrchk(cudaSetDevice(deviceIdx));
 
   printf("Running kernel %d on device %d.\n", 0, deviceIdx);
   run_test_coleasce(m, n, k, alpha, dA, dB, beta, dC);
