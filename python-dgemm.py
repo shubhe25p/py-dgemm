@@ -143,9 +143,9 @@ def matmul_loop(niterations, A, B, C, xp ):
     print("Synchronization Overhead (sec): {:.2e}".format( deltat ) )
        
     deltat = np.zeros( niterations )
-    print("Warming up CPUs a bit")
-    for i in range(100):
-        xp.matmul(A, B, out=C)
+    print("No Warming up CPUs a bit")
+    # for i in range(100):
+    #     xp.matmul(A, B, out=C)
     for i in range(niterations):
 
         synchronize_host_accel()
