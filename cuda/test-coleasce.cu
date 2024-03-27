@@ -6,8 +6,7 @@
 #include <vector>
 
 
-__global__ void test_coleasce(int M, int N, int K, float alpha, const float *A,
-                            const float *B, float beta, float *C) {
+__global__ void test_coleasce() {
   const uint x = blockIdx.x * blockDim.x + threadIdx.x;
   const uint y = blockIdx.y * blockDim.y + threadIdx.y;
 
@@ -15,10 +14,9 @@ __global__ void test_coleasce(int M, int N, int K, float alpha, const float *A,
   printf("Block DIM X: %d, Block DIM Y: %d, Block IDX X: %d, Block IDX Y: %d, Thread IDX X: %d, Thread IDX Y: %d, X: %d, Y: %d\n", blockDim.x, blockDim.y, blockIdx.x, blockIdx.y, threadIdx.x, threadIdx.y, x, y);
 }
 
-void run_test_coleasce(int M, int N, int K, float alpha, float *A, float *B,
-                     float beta, float *C) {
+void run_test_coleasce() {
   
-  test_coleasce<<<1, 8>>>(M, N, K, alpha, A, B, beta, C);
+  test_coleasce<<<1, 8>>>();
 }
 
 int main(int argc, char **argv) {
@@ -30,6 +28,6 @@ int main(int argc, char **argv) {
   }
 
   printf("Running kernel %d on device %d.\n", 0, deviceIdx);
-  run_test_coleasce(m, n, k, alpha, dA, dB, beta, dC);
+  run_test_coleasce();
   return 0;
 };
