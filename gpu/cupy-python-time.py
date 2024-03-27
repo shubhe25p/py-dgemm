@@ -204,8 +204,7 @@ def get_args():
     print("  {:12s}: {}".format( "nsize",       args.nsize       ))
     print("  {:12s}: {}".format( "accelerator", args.accelerator ))
     print("  {:12s}: {}".format( "testseed",    args.testseed    ))
-    print("  {:12s}: {}".format( "device",      args.device      ))
-    
+        
     return args
 
 #// ------------------------------------------------------- //
