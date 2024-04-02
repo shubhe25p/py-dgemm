@@ -4,15 +4,14 @@
 
 #SBATCH -N 1
 #SBATCH -C cpu
-#SBATCH -q debug
+#SBATCH -q regular
 #SBATCH -J dgemm
 #SBATCH --mail-user=spachchigar@lbl.gov
 #SBATCH --mail-type=ALL
 #SBATCH -A nintern
-#SBATCH -t 0:10:0
+#SBATCH -t 5:00:0
 
 # OpenMP settings:
-export OMP_NUM_THREADS=256
 export OMP_PLACES=cores
 export OMP_PROC_BIND=true
 
@@ -20,4 +19,11 @@ ml PrgEnv-gnu
 ml python
 
 #run the application: 
-srun -n 1 -c 256 python python-dgemm.py --nsize 1024 --niterations 100
+for t in 256 512
+do	
+    for nsize in 16384 32768
+    do
+        echo "Running with nsize=$nsize and OMP_NUM_THREADS=$t"
+        srun -n 1 -c 256 OMP_NUM_THREADS=$t python python-dgemm.py --nsize $nsize --niterations 100
+    done
+done
