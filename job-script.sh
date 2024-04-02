@@ -24,6 +24,7 @@ do
     for nsize in 16384 32768
     do
         echo "Running with nsize=$nsize and OMP_NUM_THREADS=$t"
-        srun -n 1 -c 256 OMP_NUM_THREADS=$t python python-dgemm.py --nsize $nsize --niterations 100
+        export OMP_NUM_THREADS=$t
+        srun -n 1 -c 256 python python-dgemm.py --nsize $nsize --niterations 100
     done
 done
