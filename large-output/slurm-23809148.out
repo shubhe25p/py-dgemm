@@ -1,0 +1,84 @@
+Running with nsize=16384 and OMP_NUM_THREADS=256
+Requested Arguments:
+  niterations : 100
+  nsize       : 16384
+  accelerator : False
+  testseed    : None
+Preparing Matrix arrays
+Memory required: 6.000 GB
+Time for Array Allocation (sec): 0.000023
+Time for Array Initialization (sec): 121.382
+Running matmul...
+Synchronization Overhead (sec): 1.19e-06
+No Warming up CPUs a bit
+First of 100 iterations (sec): 4.024933
+FlopCount: 8.796630e+12
+Iteration (int)   Time(s) Gflop/s
+First (0)         4.02493  2185.5
+Last (99)         3.90328  2253.7
+Best (2)          3.86300  2277.1
+GLOPS AVG = 2242.36
+Running with nsize=32768 and OMP_NUM_THREADS=256
+srun: Job 23809148 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Step created for StepId=23809148.1
+Requested Arguments:
+  niterations : 100
+  nsize       : 32768
+  accelerator : False
+  testseed    : None
+Preparing Matrix arrays
+Memory required: 24.000 GB
+Time for Array Allocation (sec): 0.000023
+Time for Array Initialization (sec): 491.546
+Running matmul...
+Synchronization Overhead (sec): 9.54e-07
+No Warming up CPUs a bit
+First of 100 iterations (sec): 23.518291
+FlopCount: 7.037089e+13
+Iteration (int)   Time(s) Gflop/s
+First (0)         23.51829  2992.2
+Last (99)         23.06708  3050.7
+Best (88)         22.95093  3066.1
+GLOPS AVG = 3052.37
+Running with nsize=16384 and OMP_NUM_THREADS=512
+srun: Job 23809148 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Step created for StepId=23809148.2
+Requested Arguments:
+  niterations : 100
+  nsize       : 16384
+  accelerator : False
+  testseed    : None
+Preparing Matrix arrays
+Memory required: 6.000 GB
+Time for Array Allocation (sec): 0.000024
+Time for Array Initialization (sec): 119.878
+Running matmul...
+Synchronization Overhead (sec): 7.15e-07
+No Warming up CPUs a bit
+First of 100 iterations (sec): 3.886741
+FlopCount: 8.796630e+12
+Iteration (int)   Time(s) Gflop/s
+First (0)         3.88674  2263.2
+Last (99)         3.84053  2290.5
+Best (75)         3.75283  2344.0
+GLOPS AVG = 2302.55
+Running with nsize=32768 and OMP_NUM_THREADS=512
+Requested Arguments:
+  niterations : 100
+  nsize       : 32768
+  accelerator : False
+  testseed    : None
+Preparing Matrix arrays
+Memory required: 24.000 GB
+Time for Array Allocation (sec): 0.000023
+Time for Array Initialization (sec): 482.798
+Running matmul...
+Synchronization Overhead (sec): 1.43e-06
+No Warming up CPUs a bit
+First of 100 iterations (sec): 23.307906
+FlopCount: 7.037089e+13
+Iteration (int)   Time(s) Gflop/s
+First (0)         23.30791  3019.2
+Last (99)         23.06161  3051.4
+Best (75)         22.97045  3063.5
+GLOPS AVG = 3049.91

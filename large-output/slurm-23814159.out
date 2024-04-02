@@ -1,0 +1,67 @@
+Running with nsize=35000 and OMP_NUM_THREADS=64
+Requested Arguments:
+  niterations : 100
+  nsize       : 35000
+  accelerator : False
+  testseed    : None
+Preparing Matrix arrays
+Memory required: 27.381 GB
+Time for Array Allocation (sec): 0.000026
+Time for Array Initialization (sec): 576.989
+Running matmul...
+Synchronization Overhead (sec): 9.54e-07
+No Warming up CPUs a bit
+First of 100 iterations (sec): 35.123492
+FlopCount: 8.575245e+13
+Iteration (int)   Time(s) Gflop/s
+First (0)         35.12349  2441.5
+Last (99)         34.98543  2451.1
+Best (76)         34.96671  2452.4
+GLOPS AVG = 2449.66
+Running with nsize=35000 and OMP_NUM_THREADS=128
+srun: Job 23814159 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Step created for StepId=23814159.1
+Requested Arguments:
+  niterations : 100
+  nsize       : 35000
+  accelerator : False
+  testseed    : None
+Preparing Matrix arrays
+Memory required: 27.381 GB
+Time for Array Allocation (sec): 0.000022
+Time for Array Initialization (sec): 553.422
+Running matmul...
+Synchronization Overhead (sec): 1.19e-06
+No Warming up CPUs a bit
+First of 100 iterations (sec): 27.744717
+FlopCount: 8.575245e+13
+Iteration (int)   Time(s) Gflop/s
+First (0)         27.74472  3090.8
+Last (99)         27.39380  3130.4
+Best (56)         27.14615  3158.9
+GLOPS AVG = 3140.41
+Running with nsize=35000 and OMP_NUM_THREADS=256
+Requested Arguments:
+  niterations : 100
+  nsize       : 35000
+  accelerator : False
+  testseed    : None
+Preparing Matrix arrays
+Memory required: 27.381 GB
+Time for Array Allocation (sec): 0.000024
+Time for Array Initialization (sec): 568.324
+Running matmul...
+Synchronization Overhead (sec): 9.54e-07
+No Warming up CPUs a bit
+First of 100 iterations (sec): 27.675301
+FlopCount: 8.575245e+13
+Iteration (int)   Time(s) Gflop/s
+First (0)         27.67530  3098.5
+Last (99)         27.76493  3088.5
+Best (55)         27.17176  3155.9
+GLOPS AVG = 3127.40
+Running with nsize=35000 and OMP_NUM_THREADS=512
+srun: Job 23814159 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Step created for StepId=23814159.3
+slurmstepd: error: *** STEP 23814159.3 ON nid007104 CANCELLED AT 2024-04-02T08:52:26 DUE TO TIME LIMIT ***
+slurmstepd: error: *** JOB 23814159 ON nid007104 CANCELLED AT 2024-04-02T08:52:26 DUE TO TIME LIMIT ***
