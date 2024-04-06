@@ -1,0 +1,42 @@
+Running with nsize=16384 and OMP_NUM_THREADS=128
+Requested Arguments:
+  niterations : 100
+  nsize       : 16384
+  accelerator : False
+  testseed    : None
+Preparing Matrix arrays
+Memory required: 6.000 GB
+Time for Array Allocation (sec): 0.000027
+Time for Array Initialization (sec): 124.485
+Running matmul...
+Synchronization Overhead (sec): 1.67e-06
+No Warming up CPUs a bit
+First of 100 iterations (sec): 3.771094
+FlopCount: 8.796630e+12
+Iteration (int)   Time(s) Gflop/s
+First (0)         3.77109  2332.6
+Last (99)         3.77509  2330.2
+Best (19)         3.69731  2379.2
+GLOPS AVG = 2331.83
+Running with nsize=16384 and OMP_NUM_THREADS=256
+srun: Job 23853288 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Step created for StepId=23853288.1
+Requested Arguments:
+  niterations : 100
+  nsize       : 16384
+  accelerator : False
+  testseed    : None
+Preparing Matrix arrays
+Memory required: 6.000 GB
+Time for Array Allocation (sec): 0.000031
+Time for Array Initialization (sec): 119.517
+Running matmul...
+Synchronization Overhead (sec): 1.43e-06
+No Warming up CPUs a bit
+First of 100 iterations (sec): 3.918556
+FlopCount: 8.796630e+12
+Iteration (int)   Time(s) Gflop/s
+First (0)         3.91856  2244.9
+Last (99)         3.80388  2312.5
+Best (34)         3.74591  2348.3
+GLOPS AVG = 2317.32
