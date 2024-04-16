@@ -26,3 +26,5 @@ plt.xticks(r1, ['MKL', 'OpenBLAS', 'BLIS', 'NetLib', 'Cray-Python'])
 
 # Create legend & Show graphic
 plt.show()
+
+plt.savefig("sample.png")

@@ -1,0 +1,26 @@
+Running with nsize=55000 and OMP_NUM_THREADS=128
+Requested Arguments:
+  niterations : 100
+  nsize       : 55000
+  accelerator : False
+  testseed    : None
+Preparing Matrix arrays
+Memory required: 67.614 GB
+Time for Array Allocation (sec): 0.000027
+Time for Array Initialization (sec): 1422.145
+Running matmul...
+Synchronization Overhead (sec): 1.19e-06
+First of 100 iterations (sec): 104.819721
+Running correctness test...
+
+Correctness test: Passed
+FlopCount: 3.327560e+14
+Iteration (int)   Time(s) Gflop/s
+First (0)         104.81972  3174.6
+Last (99)         102.67924  3240.7
+Best (30)         100.56209  3309.0
+Running with nsize=60000 and OMP_NUM_THREADS=128
+srun: Job 24116223 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Step created for StepId=24116223.1
+slurmstepd: error: *** STEP 24116223.1 ON nid007092 CANCELLED AT 2024-04-08T23:40:40 DUE TO TIME LIMIT ***
+slurmstepd: error: *** JOB 24116223 ON nid007092 CANCELLED AT 2024-04-08T23:40:40 DUE TO TIME LIMIT ***

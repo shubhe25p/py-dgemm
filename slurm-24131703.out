@@ -1,0 +1,21 @@
+Running with nsize=60000 and OMP_NUM_THREADS=128
+Requested Arguments:
+  niterations : 100
+  nsize       : 60000
+  accelerator : False
+  testseed    : None
+Preparing Matrix arrays
+Memory required: 80.466 GB
+Time for Array Allocation (sec): 0.000031
+Time for Array Initialization (sec): 1611.669
+Running matmul...
+Synchronization Overhead (sec): 1.67e-06
+First of 100 iterations (sec): 130.569863
+Running correctness test...
+
+Correctness test: Passed
+FlopCount: 4.320072e+14
+Iteration (int)   Time(s) Gflop/s
+First (0)         130.56986  3308.6
+Last (99)         127.97298  3375.8
+Best (25)         127.37292  3391.7

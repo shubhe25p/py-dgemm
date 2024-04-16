@@ -9,7 +9,7 @@
 #SBATCH --mail-user=spachchigar@sfsu.edu
 #SBATCH --mail-type=ALL
 #SBATCH -A nintern
-#SBATCH -t 1:00:0
+#SBATCH -t 7:00:0
 
 # OpenMP settings:
 export OMP_PLACES=cores
@@ -21,7 +21,7 @@ ml python
 #run the application: 
 for t in 128
 do	
-    for nsize in 5000 40000 45000 50000 65536
+    for nsize in 65536
     do
         echo "Running with nsize=$nsize and OMP_NUM_THREADS=$t"
         export OMP_NUM_THREADS=$t

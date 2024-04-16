@@ -4,6 +4,8 @@ import time
 import argparse
 import numpy as np
 import math
+from numba import njit
+from numba.openmp import openmp_context as openmp
 
 ##Hardware-specific python modules (including drop-in Numpy subtitutes) here
 ##substitute your own!
@@ -78,11 +80,13 @@ def copy_array_accel_to_host( Ad, Ah ):
 #// Function: initialize_host_arrays
 #// Initialize matrices using host memory/processor
 #// -----
+@njit
 def initialize_host_arrays( nsize, A, B ):
-    for j in range(nsize):
-        for k in range(nsize):
-            A[j, k] = j*math.sin(j) + k*math.cos(k)
-            B[j, k] = k*math.cos(j) + j*math.sin(k)
+    with openmp("parallel for"):
+        for j in range(nsize):
+            for k in range(nsize):
+                A[j, k] = j*math.sin(j) + k*math.cos(k)
+                B[j, k] = k*math.cos(j) + j*math.sin(k)
 
 
 #// -----
@@ -173,7 +177,8 @@ def matmul_loop(niterations, A, B, C, xp ):
 def check_correctness( nsize, A, B, C, testseed ):
 
     print("Running correctness test...")
-    tstart = time.time()
+    
+    t_start = time.time()
     C_test = C
     if accelerator:
         C_test = np.zeros((nsize, nsize))
@@ -196,12 +201,11 @@ def check_correctness( nsize, A, B, C, testseed ):
             msg = "Error Found at row {:d}, col {:d}. Expected: {:e}, Found: {:e}"
             print( msg.format( i, j, c_ref, c_test ) )
             is_correct = False
-
+    t_end = time.time()
     print()
     print("Correctness test: {}".format(( "Passed" if is_correct  else "Failed")) )
-    tend = time.time()
     deltat = tend - tstart
-    print("Correctness tests time {:.6f}".format( deltat ))
+    print("Correction test time (sec): {:.2e}".format( deltat ) )
     return is_correct
 
     
