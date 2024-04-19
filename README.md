@@ -78,3 +78,13 @@ conda create -n testblas -c conda-forge -y python=3.11 numpy "libblas=*=*openbla
 ### NetLib
 
 - Do not expect any performance gains, extremely slow
+
+
+### Pyomp at NERSC
+
+In bare metal containers, pyomp for current nersc-python module does not work, to make it work:
+
+```
+conda create -n pyomp python=3.9
+conda install Python-for-HPC::numba Python-for-HPC::llvmlite -c conda-forge 
+```
