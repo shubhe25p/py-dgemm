@@ -7,8 +7,8 @@ rank = comm.Get_rank()
 size = comm.Get_size()
 
 # Define the global matrix size
-global_rows = 10000
-global_cols = 10000
+global_rows = 8000
+global_cols = 8000
 
 # Divide the work among processes
 local_rows = global_rows // size

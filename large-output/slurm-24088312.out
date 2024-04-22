@@ -1,0 +1,66 @@
+Running with nsize=40000 and OMP_NUM_THREADS=128
+Requested Arguments:
+  niterations : 100
+  nsize       : 40000
+  accelerator : False
+  testseed    : None
+Preparing Matrix arrays
+Memory required: 35.763 GB
+Time for Array Allocation (sec): 0.000027
+Time for Array Initialization (sec): 720.741
+Running matmul...
+Synchronization Overhead (sec): 9.54e-07
+First of 100 iterations (sec): 40.766399
+Running correctness test...
+
+Correctness test: Passed
+FlopCount: 1.280032e+14
+Iteration (int)   Time(s) Gflop/s
+First (0)         40.76640  3139.9
+Last (99)         40.40963  3167.6
+Best (23)         40.23689  3181.2
+Running with nsize=45000 and OMP_NUM_THREADS=128
+Requested Arguments:
+  niterations : 100
+  nsize       : 45000
+  accelerator : False
+  testseed    : None
+Preparing Matrix arrays
+Memory required: 45.262 GB
+Time for Array Allocation (sec): 0.000023
+Time for Array Initialization (sec): 902.272
+Running matmul...
+Synchronization Overhead (sec): 1.43e-06
+First of 100 iterations (sec): 56.048203
+Running correctness test...
+
+Correctness test: Passed
+FlopCount: 1.822540e+14
+Iteration (int)   Time(s) Gflop/s
+First (0)         56.04820  3251.7
+Last (99)         55.87266  3262.0
+Best (43)         55.66496  3274.1
+Running with nsize=50000 and OMP_NUM_THREADS=128
+Requested Arguments:
+  niterations : 100
+  nsize       : 50000
+  accelerator : False
+  testseed    : None
+Preparing Matrix arrays
+Memory required: 55.879 GB
+Time for Array Allocation (sec): 0.000026
+Time for Array Initialization (sec): 1115.019
+Running matmul...
+Synchronization Overhead (sec): 1.19e-06
+First of 100 iterations (sec): 77.624650
+Running correctness test...
+
+Correctness test: Passed
+FlopCount: 2.500050e+14
+Iteration (int)   Time(s) Gflop/s
+First (0)         77.62465  3220.7
+Last (99)         77.59835  3221.8
+Best (11)         77.32606  3233.1
+Running with nsize=55000 and OMP_NUM_THREADS=128
+slurmstepd: error: *** STEP 24088312.3 ON nid005828 CANCELLED AT 2024-04-08T08:01:28 DUE TO TIME LIMIT ***
+slurmstepd: error: *** JOB 24088312 ON nid005828 CANCELLED AT 2024-04-08T08:01:28 DUE TO TIME LIMIT ***
