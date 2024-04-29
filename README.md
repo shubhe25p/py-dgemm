@@ -72,7 +72,7 @@ conda create -n testblas -c conda-forge -y python=3.11 numpy "libblas=*=*openbla
 
 ### BLIS
 
-- 
+- Suddenly BLIS stops working for OMP_PLACES=cores OMP_PROC_BIND=true still don't know why, it seems for this setting only a single thread run
 
 
 ### NetLib
