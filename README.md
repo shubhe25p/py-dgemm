@@ -10,6 +10,9 @@ as an interface to the underlying `DGEMM` function.
 Drop-in replacements for NumPy may be used
 to run the benchmark on GPUs or other accelerators.
 
+(c) 2024 Shubh Pachchigar
+Performance Engineering Intern
+NERSC, Berkeley Lab
 
 ## Tips and Tricks
 
@@ -25,9 +28,6 @@ The goal is to get maximum performance on DGEMM like operations in Python.
 - BLIS
 - NetLib
 
-### General guidelines for multithreaded code
-
-- Use OMP_PROC_BIND=true and OMP_PLACES=cores to achieve optimal performance. Other options get similar result.
 
 ### Intel MKL
 
@@ -35,6 +35,12 @@ The goal is to get maximum performance on DGEMM like operations in Python.
 show that MKL uses a zen optimized kernel it almost never uses any AVX2 instructions.
 
 - NERSC has developed a module with a workaround where it uses a Intel Haswell kernel with AVX2 instructions, expect a performance gain of about 20% with this.
+
+- Strong scaling study reveals that at a range of of about 512-1024 of matrix size, expect a performance boost after which it drop for a short time while again increasing for larger matrices, similar effect in fast-mkl-amd module.
+
+- The reason for the momentary drop increase then drop in performance might be due to some architecture difference between Intel and AMD chips
+
+- PROC BIND=true and PLACES=cores leads to a max performance, other options like OMP_PROC_BIND=spread yield similar results.
 
 ```
 module load fast-mkl-amd
@@ -46,6 +52,12 @@ module load fast-mkl-amd
 
 - Cray LibSci linux profiling shows that it actually runs Naples kernel a first gen system while a Milan (current system) is third gen, as of this writing configuring LIBSCI_ARCH_OVERRIDE for cray libsci still switch to Naples kernel.
 
+- Ideal performance gains in strong as well as weak scaling study.
+
+- Cray gives about 2x more GFLOPs then any BLAS implementations
+
+- 
+
 ### OpenBLAS
 
 - OpenBLAS builds with two variants if built from conda-forge: pthreads and openmp
@@ -54,8 +66,8 @@ module load fast-mkl-amd
 
 - OpenBLAS ZEN3 kernel uses Intel Haswell codes with some optimizations for Zen 3.
 
-- Best practices from OpenBLAS: OpenMP provides its own locking mechanisms, so when your code makes BLAS/LAPACK calls from inside OpenMP parallel regions it is imperative that you use an OpenBLAS that is built with USE_OPENMP=1, as otherwise deadlocks might occur. Furthermore, OpenBLAS will automatically restrict itself to using only a single thread when called from an OpenMP parallel region. When it is certain that calls will only occur from the main thread of your program (i.e. outside of omp parallel constructs), a standard pthreads build of OpenBLAS can be used as well. In that case it may be useful to tune the linger behaviour of idle threads in both your OpenMP program (e.g. set OMP_WAIT_POLICY=passive) and OpenBLAS (by redefining the THREAD_TIMEOUT variable at build time, or setting the environment variable OPENBLAS_THREAD_TIMEOUT smaller than the default 26) so that the two alternating thread pools do not unnecessarily hog the cpu during the handover.
-
+- Be careful when requesting openmp threads inside a BLAS routine or vice-versa, BLAS threads can interfere with OMP threads and can lead to resource contention.
+  
 - conda-forge sets the max thread limit to 128 for OpenBLAS build.
 
 Build Pthread variant
@@ -70,9 +82,14 @@ Build OpenMP variant
 conda create -n testblas -c conda-forge -y python=3.11 numpy "libblas=*=*openblas" "libopenblas=*=openmp*"
 ```
 
+- Default Pthread variant gives mediocre GFLOPS till 8192 then a sudden boost after that, unknown reasons again, most run gives half GFLOPs then Intel MKL.
+- OpenMP build variant on the other hand gives comparable performance to MKL but still slow compared to Cray Libsci
+
 ### BLIS
 
-- Suddenly BLIS stops working for OMP_PLACES=cores OMP_PROC_BIND=true still don't know why, it seems for this setting only a single thread run
+- BLIS is really strange, it gives worst performance for PROC_BIND=true and PLACES=cores where it only runs on single physical core while for PROC_BIND=false and PLACES=cores it gives the best performance. Here again BLIS can be built with both pthread and openmp variant but for some unknown reason conda-forge provides only the pthreads built.
+
+- More investigation needed!!
 
 Specify a build number and version number for BLAS
 ```
