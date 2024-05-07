@@ -1,0 +1,17 @@
+Requested Arguments:
+  niterations : 10
+  nsize       : 8000
+  accelerator : False
+  testseed    : None
+Preparing Matrix arrays
+Memory required: 1.431 GB
+Time for Array Allocation (sec): 0.000035
+Time for Array Initialization (sec): 33.872
+Running matmul...
+Synchronization Overhead (sec): 1.43e-06
+First of 10 iterations (sec): 0.343562
+FlopCount: 1.024128e+12
+Iteration (int)   Time(s) Gflop/s
+First (0)         0.34356  2980.9
+Last (9)          0.26219  3906.0
+Best (7)          0.25910  3952.6
