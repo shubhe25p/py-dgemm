@@ -281,7 +281,6 @@ def main():
     # check against source of truth
     #is_correct = check_correctness( nsize, A, B, C, testseed )
     #assert( is_correct )
-
     # if correctness test has passed, report performance
     report_performance( niterations, nsize, deltat_matmul )
     

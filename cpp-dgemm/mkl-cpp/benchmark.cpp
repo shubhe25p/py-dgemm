@@ -42,14 +42,6 @@ void report_performance(double* time, int iterations, double size){
    std::cout << "Best (" << index << ")      " << time[index] << " sec     " << gflops[index] << " GFLOPs" << std::endl;
 
 }
-void printArray(double* A, int n, int m){
-   for(int i=0;i<n;i++){
-      for(int j=0;j<m;j++){
-         std::cout << A[i*n+j] << " ";
-      }
-      std::cout << std::endl;
-   }
-}
 /* The benchmarking program */
 int main(int argc, char** argv) 
 {
@@ -58,15 +50,15 @@ int main(int argc, char** argv)
    // check to see if there is anything on the command line:
    // -N nnnn    to define the problem size
    // -B bbbb    to define the block size
-   int cmdline_N = -1;
-   int cmdline_I = -1; 
+   int n = -1;
+   int cmdline_I = 10; 
    int c;
 
    while ( (c = getopt(argc, argv, "N:I:")) != -1) {
       switch(c) {
          case 'N':
-            cmdline_N = std::atoi(optarg == NULL ? "-999" : optarg);
-            // std::cout << "Command line problem size: " << cmdline_N << std::endl;
+            n = std::atoi(optarg == NULL ? "-999" : optarg);
+            // std::cout << "Command line problem size: " << n << std::endl;
             break;
          case 'I':
             cmdline_I = std::atoi(optarg == NULL ? "10" : optarg);
@@ -77,28 +69,20 @@ int main(int argc, char** argv)
 
    std::cout << std::fixed << std::setprecision(6);
 
-   std::vector<int> test_sizes;
    std::vector<double> exec_time;
 
-   if (cmdline_N > 0)
-      test_sizes.push_back(cmdline_N);
-
    /* For each test size */
-   for (int i=0;i<cmdline_I;i++)
-   {
-   for (int n : test_sizes) 
-   {
+   
          std::chrono::time_point<std::chrono::high_resolution_clock> start_time, end_time;
          std::chrono::duration<double> elapsed;
-      printf("Working on problem size N=%d \n\n", n);
+         printf("Working on problem size N=%d \n\n", n);
 
          // allocate memory for 6 NxN matrics
          start_time = std::chrono::high_resolution_clock::now();
 
-         std::vector<double> buf(3 * n * n);
-         double* A = buf.data() + 0;
-         double* B = A + n * n;
-         double* C = B + n * n;
+         double *A = (double*)malloc(n*n*sizeof(double));
+         double *B = (double*)malloc(n*n*sizeof(double));
+         double *C = (double*)malloc(n*n*sizeof(double));
                            
          end_time = std::chrono::high_resolution_clock::now();
 
@@ -113,7 +97,8 @@ int main(int argc, char** argv)
 
          elapsed = end_time - start_time;
          std::cout << " Matrix fill time is : " << elapsed.count() << " (sec) " << std::endl;
-         // insert timer code here
+for (int i=0;i<cmdline_I;i++)
+   {
          start_time = std::chrono::high_resolution_clock::now();
 
          cblas_dgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, n, n, n, 1., B, n, A, n, 0. , C, n);
@@ -124,10 +109,9 @@ int main(int argc, char** argv)
 
          std::cout << " Elapsed time is : " << elapsed.count() << " (sec) \n" << std::endl;
          exec_time.push_back(elapsed.count());
-
-   } // end loop over problem sizes
+    // end loop over problem sizes
    }
-   report_performance(exec_time.data(), cmdline_I, (double)cmdline_N);
+   report_performance(exec_time.data(), cmdline_I, (double)n);
    return 0;
 }
 

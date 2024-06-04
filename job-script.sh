@@ -9,7 +9,7 @@
 #SBATCH --mail-user=spachchigar@sfsu.edu
 #SBATCH --mail-type=ALL
 #SBATCH -A nintern
-#SBATCH -t 0:50:0
+#SBATCH -t 2:30:0
 
 # OpenMP settings:
 export OMP_PLACES=cores
@@ -18,17 +18,16 @@ export OMP_PROC_BIND=true
 ml PrgEnv-gnu
 ml python
 # conda create -n test -c conda-forge python=3.11 numpy "libblas=*=*openblas" "libopenblas=*=openmp*"
-ml fast-mkl-amd
 # conda activate test
 
 #run the application: 
-for nsize in 32 64 128 256 1024 2048 4096 8192 16384 32768
+for nsize in 32 64 128 256 512 1024 2048 4096 8192 16384 32768 35000
 do	
-    for t in 128
+    for t in 16 32 64 128
     do
         echo "Running with nsize=$nsize and OMP_NUM_THREADS=$t"
         export OMP_NUM_THREADS=$t
-        srun -n 1 python python-dgemm.py --nsize $nsize --niterations 10
+        srun -n 1 python python-dgemm.py --nsize $nsize --niterations 100
     done
 done
 

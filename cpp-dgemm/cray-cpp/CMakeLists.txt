@@ -9,11 +9,7 @@ find_package(BLAS REQUIRED) # cray builds
 add_executable(benchmark-blas benchmark.cpp)
 target_link_libraries(benchmark-blas PRIVATE ${BLAS_LIBRARIES}) # cray builds
 
-# target_link_libraries(benchmark-blas PRIVATE /global/homes/s/shubhp/work/py-dgemm/OpenBLAS/build/lib/libopenblas.so) # openmp+openblas builds
-# target_link_libraries(benchmark-blas PRIVATE /global/homes/s/shubhp/work/py-dgemm/blis/lib/zen3/libblis.so) # blis+openmp builds
-
 target_link_options(benchmark-blas PRIVATE -fopenmp)
-# target_compile_features(benchmark-blas PRIVATE c_std_11 c_restrict)
 target_compile_options(benchmark-blas PRIVATE -Wall -pedantic -march=native)
 
 # eof
