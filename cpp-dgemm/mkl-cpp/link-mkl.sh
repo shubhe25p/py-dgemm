@@ -7,3 +7,6 @@ make
 # libraries use the 64-bit integer type (necessary for indexing 
 #large arrays, with more than 231-1 elements), 
 # whereas the LP64 libraries index arrays with the 32-bit integer type.
+
+# g++ benchmark.cpp -o benchmark -I$MKLROOT/include -L$MKLROOT/lib/intel64 -lmkl_intel_ilp64 -lmkl_intel_thread -lmkl_core /opt/intel/oneapi/compiler/2022.1.0/linux/compiler/lib/intel64_lin/libiomp5.so
+
